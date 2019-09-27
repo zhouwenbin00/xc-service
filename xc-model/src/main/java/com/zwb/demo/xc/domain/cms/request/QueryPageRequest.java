@@ -3,9 +3,7 @@ package com.zwb.demo.xc.domain.cms.request;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
-/**
- * Created by root on 2019/9/27 17:58
- */
+/** Created by root on 2019/9/27 17:58 */
 @Data
 public class QueryPageRequest {
     // 站点id

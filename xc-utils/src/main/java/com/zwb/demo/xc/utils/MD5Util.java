@@ -7,21 +7,16 @@ import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-/**
- * Created by admin on 2018/3/5.
- */
+/** Created by admin on 2018/3/5. */
 public class MD5Util {
 
-    /**
-     * The M d5.
-     */
+    /** The M d5. */
     static MessageDigest MD5 = null;
 
-    /**
-     * The Constant HEX_DIGITS.
-     */
-    private static final char HEX_DIGITS[] = {'0', '1', '2', '3', '4', '5',
-            '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
+    /** The Constant HEX_DIGITS. */
+    private static final char HEX_DIGITS[] = {
+        '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'
+    };
 
     static {
         try {
@@ -55,8 +50,7 @@ public class MD5Util {
             throw e;
         } finally {
             try {
-                if (fileInputStream != null)
-                    fileInputStream.close();
+                if (fileInputStream != null) fileInputStream.close();
             } catch (IOException e) {
                 throw e;
             }
@@ -83,7 +77,6 @@ public class MD5Util {
      */
     public static String encodeHex(byte bytes[]) {
         return bytesToHex(bytes, 0, bytes.length);
-
     }
 
     /**
@@ -91,7 +84,7 @@ public class MD5Util {
      *
      * @param bytes the bytes
      * @param start the start
-     * @param end   the end
+     * @param end the end
      * @return the string
      */
     public static String bytesToHex(byte bytes[], int start, int end) {
@@ -100,7 +93,6 @@ public class MD5Util {
             sb.append(byteToHex(bytes[i]));
         }
         return sb.toString();
-
     }
 
     /**
@@ -111,7 +103,6 @@ public class MD5Util {
      */
     public static String byteToHex(byte bt) {
         return HEX_DIGITS[(bt & 0xf0) >> 4] + "" + HEX_DIGITS[bt & 0xf];
-
     }
 
     /**

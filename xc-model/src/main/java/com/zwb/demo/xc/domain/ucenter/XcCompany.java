@@ -7,20 +7,20 @@ import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.*;
 import java.io.Serializable;
 
-/**
- * Created by admin on 2018/2/10.
- */
+/** Created by admin on 2018/2/10. */
 @Data
 @ToString
 @Entity
-@Table(name="xc_company")
+@Table(name = "xc_company")
 @GenericGenerator(name = "jpa-uuid", strategy = "uuid")
 public class XcCompany implements Serializable {
     private static final long serialVersionUID = -916357110051689786L;
+
     @Id
     @GeneratedValue(generator = "jpa-uuid")
     @Column(length = 32)
     private String id;
+
     private String name;
     private String logo;
     private String intro;
@@ -31,6 +31,4 @@ public class XcCompany implements Serializable {
     private String worktype;
     private String businesspic;
     private String status;
-
-
 }

@@ -7,9 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-/**
- * Created by admin on 2018/3/5.
- */
+/** Created by admin on 2018/3/5. */
 @Data
 @ToString
 @NoArgsConstructor
@@ -19,6 +17,7 @@ public class CheckChunkResult extends ResponseResult {
         super(resultCode);
         this.fileExist = fileExist;
     }
+
     @ApiModelProperty(value = "文件分块存在标记", example = "true", required = true)
     boolean fileExist;
 }

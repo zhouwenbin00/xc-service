@@ -3,17 +3,13 @@ package com.zwb.demo.xc.domain.media;
 import lombok.Data;
 import lombok.ToString;
 
-
-/**
- * Created by admin on 2018/3/5.
- */
+/** Created by admin on 2018/3/5. */
 @Data
 @ToString
 public class MediaVideoCourseSimple {
 
-    //课程id
+    // 课程id
     private String courseid;
-    //章节id
+    // 章节id
     private String chapter;
-
 }

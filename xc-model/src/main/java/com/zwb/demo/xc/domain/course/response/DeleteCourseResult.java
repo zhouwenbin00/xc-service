@@ -5,9 +5,7 @@ import com.zwb.demo.xc.model.response.ResultCode;
 import lombok.Data;
 import lombok.ToString;
 
-/**
- * Created by mrt on 2018/3/20.
- */
+/** Created by mrt on 2018/3/20. */
 @Data
 @ToString
 public class DeleteCourseResult extends ResponseResult {
@@ -15,6 +13,6 @@ public class DeleteCourseResult extends ResponseResult {
         super(resultCode);
         this.courseid = courseid;
     }
-    private String courseid;
 
+    private String courseid;
 }

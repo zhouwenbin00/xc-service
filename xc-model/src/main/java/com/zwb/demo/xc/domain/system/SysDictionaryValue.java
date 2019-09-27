@@ -4,9 +4,7 @@ import lombok.Data;
 import lombok.ToString;
 import org.springframework.data.mongodb.core.mapping.Field;
 
-/**
- * Created by admin on 2018/2/6.
- */
+/** Created by admin on 2018/2/6. */
 @Data
 @ToString
 public class SysDictionaryValue {
@@ -19,5 +17,4 @@ public class SysDictionaryValue {
 
     @Field("sd_status")
     private String sdStatus;
-
 }

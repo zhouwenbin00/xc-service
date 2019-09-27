@@ -8,16 +8,13 @@ import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.util.List;
 
-/**
- * Created by admin on 2018/2/6.
- */
+/** Created by admin on 2018/2/6. */
 @Data
 @ToString
 @Document(collection = "sys_dictionary")
 public class SysDictionary {
 
-    @Id
-    private String id;
+    @Id private String id;
 
     @Field("d_name")
     private String dName;
@@ -27,5 +24,4 @@ public class SysDictionary {
 
     @Field("d_value")
     private List<SysDictionaryValue> dValue;
-
 }
