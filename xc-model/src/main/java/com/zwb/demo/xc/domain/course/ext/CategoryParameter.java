@@ -1,6 +1,6 @@
 package com.zwb.demo.xc.domain.course.ext;
 
-import com.xuecheng.framework.domain.course.Category;
+import com.zwb.demo.xc.domain.course.Category;
 import lombok.Data;
 import lombok.ToString;
 

@@ -1,6 +1,6 @@
 package com.zwb.demo.xc.domain.cms.response;
 
-import com.xuecheng.framework.domain.cms.CmsPage;
+import com.zwb.demo.xc.domain.cms.CmsPage;
 import com.zwb.demo.xc.model.response.ResponseResult;
 import com.zwb.demo.xc.model.response.ResultCode;
 import lombok.Data;

@@ -1,6 +1,6 @@
 package com.zwb.demo.xc.domain.cms.ext;
 
-import com.xuecheng.framework.domain.cms.CmsPage;
+import com.zwb.demo.xc.domain.cms.CmsPage;
 import lombok.Data;
 import lombok.ToString;
 

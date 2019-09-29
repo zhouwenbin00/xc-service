@@ -1,10 +1,10 @@
 package com.zwb.demo.xc.domain.portalview;
 
-import com.xuecheng.framework.domain.course.CourseBase;
-import com.xuecheng.framework.domain.course.CourseMarket;
-import com.xuecheng.framework.domain.course.CoursePic;
-import com.xuecheng.framework.domain.course.ext.TeachplanNode;
-import com.xuecheng.framework.domain.report.ReportCourse;
+import com.zwb.demo.xc.domain.course.CourseBase;
+import com.zwb.demo.xc.domain.course.CourseMarket;
+import com.zwb.demo.xc.domain.course.CoursePic;
+import com.zwb.demo.xc.domain.course.ext.TeachplanNode;
+import com.zwb.demo.xc.domain.report.ReportCourse;
 import lombok.Data;
 import lombok.ToString;
 import org.springframework.data.annotation.Id;

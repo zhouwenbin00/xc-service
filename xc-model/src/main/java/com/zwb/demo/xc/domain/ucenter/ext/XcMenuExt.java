@@ -1,7 +1,7 @@
 package com.zwb.demo.xc.domain.ucenter.ext;
 
-import com.xuecheng.framework.domain.course.ext.CategoryNode;
-import com.xuecheng.framework.domain.ucenter.XcMenu;
+import com.zwb.demo.xc.domain.course.ext.CategoryNode;
+import com.zwb.demo.xc.domain.ucenter.XcMenu;
 import lombok.Data;
 import lombok.ToString;
 

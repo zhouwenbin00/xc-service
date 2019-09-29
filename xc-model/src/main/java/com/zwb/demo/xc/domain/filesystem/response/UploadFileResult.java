@@ -1,6 +1,6 @@
 package com.zwb.demo.xc.domain.filesystem.response;
 
-import com.xuecheng.framework.domain.filesystem.FileSystem;
+import com.zwb.demo.xc.domain.filesystem.FileSystem;
 import com.zwb.demo.xc.model.response.ResponseResult;
 import com.zwb.demo.xc.model.response.ResultCode;
 import io.swagger.annotations.ApiModelProperty;

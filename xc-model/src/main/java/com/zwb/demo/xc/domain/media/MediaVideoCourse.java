@@ -1,6 +1,6 @@
 package com.zwb.demo.xc.domain.media;
 
-import com.xuecheng.framework.utils.MD5Util;
+import com.zwb.demo.xc.utils.MD5Util;
 import lombok.Data;
 import lombok.ToString;
 import org.springframework.data.annotation.Id;
