@@ -1,15 +1,21 @@
 package com.zwb.demo.xc.manage_cms.service;
 
+import com.zwb.demo.xc.common.exception.ExceptionCast;
 import com.zwb.demo.xc.domain.cms.CmsPage;
 import com.zwb.demo.xc.domain.cms.request.QueryPageRequest;
+import com.zwb.demo.xc.domain.cms.response.CmsCode;
+import com.zwb.demo.xc.domain.cms.response.CmsPageResult;
 import com.zwb.demo.xc.manage_cms.dao.CmsPageRepository;
-import com.zwb.demo.xc.model.response.CommonCode;
-import com.zwb.demo.xc.model.response.QueryResponseResult;
-import com.zwb.demo.xc.model.response.QueryResult;
+import com.zwb.demo.xc.common.model.response.CommonCode;
+import com.zwb.demo.xc.common.model.response.QueryResponseResult;
+import com.zwb.demo.xc.common.model.response.QueryResult;
+import com.zwb.demo.xc.common.model.response.ResponseResult;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 /** Created by zwb on 2019/9/27 20:01 */
 @Service
@@ -59,5 +65,59 @@ public class PageService {
         QueryResponseResult queryResponseResult =
                 new QueryResponseResult(CommonCode.SUCCESS, queryResult);
         return queryResponseResult;
+    }
+
+    /**
+     * 新增页面
+     *
+     * @param cmsPage
+     * @return
+     */
+    public CmsPageResult addCmsPage(CmsPage cmsPage) {
+        if (cmsPage == null) {
+            ExceptionCast.cast(CommonCode.FAIL);
+        }
+        // 校验唯一性
+        CmsPage cmsPage1 =
+                cmsPageRepository.findByPageNameAndSiteIdAndPageWebPath(
+                        cmsPage.getPageName(), cmsPage.getSiteId(), cmsPage.getPageWebPath());
+        if (cmsPage1 != null) {
+            ExceptionCast.cast(CmsCode.CMS_ADDPAGE_EXISTSNAME);
+        }
+        // 调用dao，新增页面
+        cmsPage.setPageId(null);
+        CmsPage save = cmsPageRepository.save(cmsPage);
+        return new CmsPageResult(CommonCode.SUCCESS, save);
+    }
+
+    public CmsPage findById(String id) {
+        Optional<CmsPage> optinal = cmsPageRepository.findById(id);
+        return optinal.orElse(null);
+    }
+
+    public CmsPageResult update(String id, CmsPage cmsPage) {
+        CmsPage one = findById(id);
+        if (one != null) {
+            one.setTemplateId(cmsPage.getTemplateId());
+            one.setSiteId(cmsPage.getSiteId());
+            one.setPageAliase(cmsPage.getPageAliase());
+            one.setPageName(cmsPage.getPageName());
+            one.setPageWebPath(cmsPage.getPageWebPath());
+            one.setPagePhysicalPath(cmsPage.getPagePhysicalPath());
+            cmsPageRepository.save(one);
+            return new CmsPageResult(CommonCode.SUCCESS, one);
+        }
+        // 修改失败
+        return new CmsPageResult(CommonCode.FAIL, null);
+    }
+
+    public ResponseResult delete(String id) {
+        Optional<CmsPage> optional = cmsPageRepository.findById(id);
+        if (optional.isPresent()) {
+            cmsPageRepository.delete(optional.get());
+            return new ResponseResult(CommonCode.SUCCESS);
+        }
+        // 查询失败
+        return new ResponseResult(CommonCode.FAIL);
     }
 }

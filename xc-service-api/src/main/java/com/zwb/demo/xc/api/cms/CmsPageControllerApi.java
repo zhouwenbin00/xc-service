@@ -1,7 +1,10 @@
 package com.zwb.demo.xc.api.cms;
 
+import com.zwb.demo.xc.domain.cms.CmsPage;
 import com.zwb.demo.xc.domain.cms.request.QueryPageRequest;
-import com.zwb.demo.xc.model.response.QueryResponseResult;
+import com.zwb.demo.xc.domain.cms.response.CmsPageResult;
+import com.zwb.demo.xc.common.model.response.QueryResponseResult;
+import com.zwb.demo.xc.common.model.response.ResponseResult;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -27,5 +30,18 @@ public interface CmsPageControllerApi {
                 paramType = "path",
                 dataType = "int")
     })
-    public QueryResponseResult findList(int page, int size, QueryPageRequest queryPageRequest);
+    QueryResponseResult findList(int page, int size, QueryPageRequest queryPageRequest);
+
+    // 新增页面
+    @ApiOperation("新增页面")
+    CmsPageResult addCmsPage(CmsPage cmsPage);
+
+    @ApiOperation("根据页面id查询信息")
+    CmsPage findById(String id);
+
+    @ApiOperation("修改页面")
+    CmsPageResult edit(String id, CmsPage cmsPage);
+
+    @ApiOperation("删除页面")
+    ResponseResult delete(String id);
 }

@@ -2,8 +2,8 @@ package com.zwb.demo.xc.domain.media.response;
 
 import com.zwb.demo.xc.domain.media.MediaFile;
 import com.zwb.demo.xc.domain.media.MediaVideoCourse;
-import com.zwb.demo.xc.model.response.ResponseResult;
-import com.zwb.demo.xc.model.response.ResultCode;
+import com.zwb.demo.xc.common.model.response.ResponseResult;
+import com.zwb.demo.xc.common.model.response.ResultCode;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;

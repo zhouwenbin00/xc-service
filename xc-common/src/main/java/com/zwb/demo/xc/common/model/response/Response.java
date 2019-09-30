@@ -1,4 +1,4 @@
-package com.zwb.demo.xc.model.response;
+package com.zwb.demo.xc.common.model.response;
 
 /** Created by zwb on 2019/9/27 18:31 */
 public interface Response {

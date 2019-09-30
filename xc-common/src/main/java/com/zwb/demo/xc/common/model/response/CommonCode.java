@@ -1,4 +1,4 @@
-package com.zwb.demo.xc.model.response;
+package com.zwb.demo.xc.common.model.response;
 
 import lombok.ToString;
 

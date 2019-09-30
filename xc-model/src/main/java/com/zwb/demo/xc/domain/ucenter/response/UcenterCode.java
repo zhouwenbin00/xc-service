@@ -1,7 +1,7 @@
 package com.zwb.demo.xc.domain.ucenter.response;
 
 import com.google.common.collect.ImmutableMap;
-import com.zwb.demo.xc.model.response.ResultCode;
+import com.zwb.demo.xc.common.model.response.ResultCode;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.ToString;
 

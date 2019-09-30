@@ -1,4 +1,4 @@
-package com.zwb.demo.xc.client;
+package com.zwb.demo.xc.common.client;
 
 /** Created by zwb on 2019/9/27 20:41 */
 public class XcServiceList {

@@ -1,6 +1,6 @@
 package com.zwb.demo.xc.domain.media.request;
 
-import com.zwb.demo.xc.model.request.RequestData;
+import com.zwb.demo.xc.common.model.request.RequestData;
 import lombok.Data;
 
 @Data

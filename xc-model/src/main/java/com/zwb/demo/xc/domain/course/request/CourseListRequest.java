@@ -1,6 +1,6 @@
 package com.zwb.demo.xc.domain.course.request;
 
-import com.zwb.demo.xc.model.request.RequestData;
+import com.zwb.demo.xc.common.model.request.RequestData;
 import lombok.Data;
 import lombok.ToString;
 

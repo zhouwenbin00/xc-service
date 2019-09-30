@@ -1,4 +1,4 @@
-package com.zwb.demo.xc.model.request;
+package com.zwb.demo.xc.common.model.request;
 
 import lombok.Data;
 import lombok.ToString;

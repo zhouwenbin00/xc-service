@@ -1,7 +1,7 @@
 package com.zwb.demo.xc.domain.cms.response;
 
-import com.zwb.demo.xc.model.response.ResponseResult;
-import com.zwb.demo.xc.model.response.ResultCode;
+import com.zwb.demo.xc.common.model.response.ResponseResult;
+import com.zwb.demo.xc.common.model.response.ResultCode;
 import lombok.Data;
 
 /** Created by mrt on 2018/3/31. */

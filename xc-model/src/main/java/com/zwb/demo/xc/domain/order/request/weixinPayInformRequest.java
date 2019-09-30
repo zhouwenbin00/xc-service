@@ -1,6 +1,6 @@
 package com.zwb.demo.xc.domain.order.request;
 
-import com.zwb.demo.xc.model.request.RequestData;
+import com.zwb.demo.xc.common.model.request.RequestData;
 import lombok.Data;
 
 /** Created by mrt on 2018/3/27. */

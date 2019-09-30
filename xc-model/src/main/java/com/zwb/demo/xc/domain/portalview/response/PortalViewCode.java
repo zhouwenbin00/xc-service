@@ -1,7 +1,7 @@
 package com.zwb.demo.xc.domain.portalview.response;
 
 import com.google.common.collect.ImmutableMap;
-import com.zwb.demo.xc.model.response.ResultCode;
+import com.zwb.demo.xc.common.model.response.ResultCode;
 import lombok.ToString;
 
 /** Created by admin on 2018/3/5. */

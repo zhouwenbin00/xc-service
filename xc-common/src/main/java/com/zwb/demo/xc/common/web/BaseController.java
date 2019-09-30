@@ -1,4 +1,4 @@
-package com.zwb.demo.xc.web;
+package com.zwb.demo.xc.common.web;
 
 import org.springframework.web.bind.annotation.ModelAttribute;
 
