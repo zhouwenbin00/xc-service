@@ -2,7 +2,7 @@
   "_id": {
     "$oid": "5a754adf6abb500ad05688d9"
   },
-  "_class": "com.xuecheng.framework.domain.cms.CmsPage",
+  "_class": "com.zwb.demo.xc.domain.cms.CmsPage",
   "siteId": "5a751fab6abb5044e0d19ea1",
   "pageName": "index.html",
   "pageAliase": "首页",
@@ -19,7 +19,7 @@
   "_id": {
     "$oid": "5a795ac7dd573c04508f3a56"
   },
-  "_class": "com.xuecheng.framework.domain.cms.CmsPage",
+  "_class": "com.zwb.demo.xc.domain.cms.CmsPage",
   "siteId": "5a751fab6abb5044e0d19ea1",
   "pageName": "index_banner.html",
   "pageAliase": "轮播图",
@@ -36,7 +36,7 @@
   "_id": {
     "$oid": "5a7be667d019f14d90a1fb1c"
   },
-  "_class": "com.xuecheng.framework.domain.cms.CmsPage",
+  "_class": "com.zwb.demo.xc.domain.cms.CmsPage",
   "siteId": "5a751fab6abb5044e0d19ea1",
   "pageName": "index_category.html",
   "pageAliase": "分类导航",
@@ -53,7 +53,7 @@
   "_id": {
     "$oid": "5a92141cb00ffc5a448ff1a0"
   },
-  "_class": "com.xuecheng.framework.domain.cms.CmsPage",
+  "_class": "com.zwb.demo.xc.domain.cms.CmsPage",
   "siteId": "5a751fab6abb5044e0d19ea1",
   "pageName": "10101.html",
   "pageAliase": "课程详情页面",
@@ -76,7 +76,7 @@
   "_id": {
     "$oid": "5a94d79cb00ffc3ab4bfa4f6"
   },
-  "_class": "com.xuecheng.framework.domain.cms.CmsPage",
+  "_class": "com.zwb.demo.xc.domain.cms.CmsPage",
   "siteId": "5a751fab6abb5044e0d19ea1",
   "pageName": "4028e581617f945f01617f9dabc40000.html",
   "pageAliase": "课程详情页面",
@@ -99,7 +99,7 @@
   "_id": {
     "$oid": "5a96114fb00ffc4b44f63e06"
   },
-  "_class": "com.xuecheng.framework.domain.cms.CmsPage",
+  "_class": "com.zwb.demo.xc.domain.cms.CmsPage",
   "siteId": "5a751fab6abb5044e0d19ea1",
   "pageName": "4028e58161bcf7f40161bcf8b77c0000.html",
   "pageAliase": "课程详情页面",
@@ -122,7 +122,7 @@
   "_id": {
     "$oid": "5a961ff6b00ffc5a9cdebaea"
   },
-  "_class": "com.xuecheng.framework.domain.cms.CmsPage",
+  "_class": "com.zwb.demo.xc.domain.cms.CmsPage",
   "siteId": "5a751fab6abb5044e0d19ea1",
   "pageName": "4028e58161bd22e60161bd23672a0001.html",
   "pageAliase": "课程详情页面",
@@ -145,7 +145,7 @@
   "_id": {
     "$oid": "5a9620b9b00ffc5a9cdebaed"
   },
-  "_class": "com.xuecheng.framework.domain.cms.CmsPage",
+  "_class": "com.zwb.demo.xc.domain.cms.CmsPage",
   "siteId": "5a751fab6abb5044e0d19ea1",
   "pageName": "4028e58161bd3b380161bd3bcd2f0000.html",
   "pageAliase": "课程详情页面",
@@ -168,7 +168,7 @@
   "_id": {
     "$oid": "5abefd525b05aa293098fca6"
   },
-  "_class": "com.xuecheng.framework.domain.cms.CmsPage",
+  "_class": "com.zwb.demo.xc.domain.cms.CmsPage",
   "siteId": "5a751fab6abb5044e0d19ea1",
   "pageName": "index2.html",
   "pageAliase": "ccc",
@@ -187,7 +187,7 @@
   "_id": {
     "$oid": "5ad92e9068db52404cad0f79"
   },
-  "_class": "com.xuecheng.framework.domain.cms.CmsPage",
+  "_class": "com.zwb.demo.xc.domain.cms.CmsPage",
   "siteId": "5a751fab6abb5044e0d19ea1",
   "pageName": "preview_402885816243d2dd016243f24c030002.html",
   "pageAliase": "课程预览页面",
@@ -205,7 +205,7 @@
   "_id": {
     "$oid": "5ad92f5468db52404cad0f7c"
   },
-  "_class": "com.xuecheng.framework.domain.cms.CmsPage",
+  "_class": "com.zwb.demo.xc.domain.cms.CmsPage",
   "siteId": "5a751fab6abb5044e0d19ea1",
   "pageName": "402885816243d2dd016243f24c030002.html",
   "pageAliase": "课程详情页面",
@@ -222,7 +222,7 @@
   "_id": {
     "$oid": "5ad94b9168db5243ec846e8e"
   },
-  "_class": "com.xuecheng.framework.domain.cms.CmsPage",
+  "_class": "com.zwb.demo.xc.domain.cms.CmsPage",
   "siteId": "5a751fab6abb5044e0d19ea1",
   "pageName": "preview_4028858162e0bc0a0162e0bfdf1a0000.html",
   "pageAliase": "课程预览页面",
@@ -240,7 +240,7 @@
   "_id": {
     "$oid": "5ad94ba368db5243ec846e91"
   },
-  "_class": "com.xuecheng.framework.domain.cms.CmsPage",
+  "_class": "com.zwb.demo.xc.domain.cms.CmsPage",
   "siteId": "5a751fab6abb5044e0d19ea1",
   "pageName": "4028858162e0bc0a0162e0bfdf1a0000.html",
   "pageAliase": "课程详情页面",
@@ -257,7 +257,7 @@
   "_id": {
     "$oid": "5ad99fb768db523ef42cd02d"
   },
-  "_class": "com.xuecheng.framework.domain.cms.CmsPage",
+  "_class": "com.zwb.demo.xc.domain.cms.CmsPage",
   "siteId": "5a751fab6abb5044e0d19ea1",
   "pageName": "preview_123.html",
   "pageAliase": "课程预览页面",
@@ -275,7 +275,7 @@
   "_id": {
     "$oid": "5ada939168db524a909d30a8"
   },
-  "_class": "com.xuecheng.framework.domain.cms.CmsPage",
+  "_class": "com.zwb.demo.xc.domain.cms.CmsPage",
   "siteId": "5a751fab6abb5044e0d19ea1",
   "pageName": "preview_297e7c7c62b888f00162b8a7dec20000.html",
   "pageAliase": "课程预览页面",
@@ -293,7 +293,7 @@
   "_id": {
     "$oid": "5ada97cb68db526124fd79c3"
   },
-  "_class": "com.xuecheng.framework.domain.cms.CmsPage",
+  "_class": "com.zwb.demo.xc.domain.cms.CmsPage",
   "siteId": "5a751fab6abb5044e0d19ea1",
   "pageName": "preview_297e7c7c62b888f00162b8a965510001.html",
   "pageAliase": "课程预览页面",
@@ -311,7 +311,7 @@
   "_id": {
     "$oid": "5adaa4d868db526288d3df3b"
   },
-  "_class": "com.xuecheng.framework.domain.cms.CmsPage",
+  "_class": "com.zwb.demo.xc.domain.cms.CmsPage",
   "siteId": "5a751fab6abb5044e0d19ea1",
   "pageName": "297e7c7c62b888f00162b8a965510001.html",
   "pageAliase": "课程详情页面",
@@ -328,7 +328,7 @@
   "_id": {
     "$oid": "5ae193170e66183ee06f71c5"
   },
-  "_class": "com.xuecheng.framework.domain.cms.CmsPage",
+  "_class": "com.zwb.demo.xc.domain.cms.CmsPage",
   "siteId": "5a751fab6abb5044e0d19ea1",
   "pageName": "297e7c7c62b888f00162b8a7dec20000.html",
   "pageAliase": "课程详情页面",
@@ -345,7 +345,7 @@
   "_id": {
     "$oid": "5ae1973b0e6618644cd7a6fa"
   },
-  "_class": "com.xuecheng.framework.domain.cms.CmsPage",
+  "_class": "com.zwb.demo.xc.domain.cms.CmsPage",
   "siteId": "5a751fab6abb5044e0d19ea1",
   "pageName": "preview_297e7c7c62b8aa9d0162b8ab13910000.html",
   "pageAliase": "课程预览页面",
@@ -363,7 +363,7 @@
   "_id": {
     "$oid": "5ae1979f0e6618644cd7a6fd"
   },
-  "_class": "com.xuecheng.framework.domain.cms.CmsPage",
+  "_class": "com.zwb.demo.xc.domain.cms.CmsPage",
   "siteId": "5a751fab6abb5044e0d19ea1",
   "pageName": "297e7c7c62b8aa9d0162b8ab13910000.html",
   "pageAliase": "课程详情页面",
@@ -380,7 +380,7 @@
   "_id": {
     "$oid": "5aed94530e66185b64804c11"
   },
-  "_class": "com.xuecheng.framework.domain.cms.CmsPage",
+  "_class": "com.zwb.demo.xc.domain.cms.CmsPage",
   "siteId": "5a751fab6abb5044e0d19ea1",
   "pageName": "preview_4028e581617f945f01617f9dabc40000.html",
   "pageAliase": "课程预览页面",
@@ -398,7 +398,7 @@
   "_id": {
     "$oid": "5af942190e661827d8e2f5e3"
   },
-  "_class": "com.xuecheng.framework.domain.cms.CmsPage",
+  "_class": "com.zwb.demo.xc.domain.cms.CmsPage",
   "siteId": "5a751fab6abb5044e0d19ea1",
   "pageName": "preview_4028e58161bd3b380161bd3bcd2f0000.html",
   "pageAliase": "课程预览页面",

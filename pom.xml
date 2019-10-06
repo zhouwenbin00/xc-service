@@ -7,7 +7,7 @@
         <module>xc-common</module>
         <module>xc-model</module>
         <module>xc-service-api</module>
-        <module>xc-service-manager-cms</module>
+        <module>xc-service-manage-cms</module>
         <module>xc-utils</module>
     </modules>
     <parent>

@@ -2,7 +2,7 @@
   "_id": {
     "$oid": "5a791725dd573c3574ee333f"
   },
-  "_class": "com.xuecheng.framework.domain.cms.CmsConfig",
+  "_class": "com.zwb.demo.xc.domain.cms.CmsConfig",
   "name": "轮播图",
   "model": [
     {
@@ -26,7 +26,7 @@
   "_id": {
     "$oid": "5a795d82dd573c3574ee3360"
   },
-  "_class": "com.xuecheng.framework.domain.cms.CmsConfig",
+  "_class": "com.zwb.demo.xc.domain.cms.CmsConfig",
   "name": "精品推荐",
   "model": [
     {
@@ -170,7 +170,7 @@
   "_id": {
     "$oid": "5a7bdd8bd019f1162c63ad32"
   },
-  "_class": "com.xuecheng.framework.domain.cms.CmsConfig",
+  "_class": "com.zwb.demo.xc.domain.cms.CmsConfig",
   "name": "分类信息",
   "model": [
     {
