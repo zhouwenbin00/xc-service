@@ -12,7 +12,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 /** Created by zwb on 2019/10/10 21:15 */
 @SpringBootTest(classes = TestRabbitMqApplication.class)
 @RunWith(SpringRunner.class)
-public class Produce05_topic_springboot {
+public class Producer05_topic_springboot {
 
     @Autowired RabbitTemplate rabbitTemplate;
 

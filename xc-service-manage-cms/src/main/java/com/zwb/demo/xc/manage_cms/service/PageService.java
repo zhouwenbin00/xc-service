@@ -1,5 +1,6 @@
 package com.zwb.demo.xc.manage_cms.service;
 
+import com.alibaba.fastjson.JSON;
 import com.mongodb.client.gridfs.GridFSBucket;
 import com.mongodb.client.gridfs.GridFSDownloadStream;
 import com.mongodb.client.gridfs.model.GridFSFile;
@@ -10,6 +11,7 @@ import com.zwb.demo.xc.domain.cms.CmsTemplate;
 import com.zwb.demo.xc.domain.cms.request.QueryPageRequest;
 import com.zwb.demo.xc.domain.cms.response.CmsCode;
 import com.zwb.demo.xc.domain.cms.response.CmsPageResult;
+import com.zwb.demo.xc.manage_cms.config.RabbitmqConfig;
 import com.zwb.demo.xc.manage_cms.dao.CmsConfigRepository;
 import com.zwb.demo.xc.manage_cms.dao.CmsPageRepository;
 import com.zwb.demo.xc.common.model.response.CommonCode;
@@ -20,9 +22,12 @@ import com.zwb.demo.xc.manage_cms.dao.CmsTemplateRepository;
 import freemarker.cache.StringTemplateLoader;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.bouncycastle.cms.CMSConfig;
+import org.bson.types.ObjectId;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -35,12 +40,15 @@ import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
 /** Created by zwb on 2019/9/27 20:01 */
 @Service
+@Slf4j
 public class PageService {
 
     @Autowired CmsPageRepository cmsPageRepository;
@@ -49,6 +57,7 @@ public class PageService {
     @Autowired RestTemplate restTemplate;
     @Autowired GridFSBucket gridFSBucket;
     @Autowired GridFsTemplate gridFsTemplate;
+    @Autowired RabbitTemplate rabbitTemplate;
 
     /**
      * 页面查询方法
@@ -254,5 +263,54 @@ public class PageService {
         // 通过restTemplate请求url获取数据
         ResponseEntity<Map> forEntity = restTemplate.getForEntity(dataUrl, Map.class);
         return forEntity.getBody();
+    }
+
+    /** 发布页面 */
+    public ResponseResult post(String pageId) {
+        // 执行页面静态化
+        String pageHtml = this.getPageHtml(pageId);
+        // 存储GridFs
+        saveHtml(pageId, pageHtml);
+        // 向mq发消息
+        sendPostPage(pageId);
+        log.info("post success");
+        return new ResponseResult(CommonCode.SUCCESS);
+    }
+
+    /** 向mq发送消息 */
+    private void sendPostPage(String pageId) {
+        CmsPage cmsPage = this.findById(pageId);
+        if (cmsPage == null) {
+            ExceptionCast.cast(CommonCode.INVALLD_PARAM);
+        }
+        // 创建消息对象
+        Map<String, String> msg = new HashMap<>();
+        msg.put("pageId", pageId);
+        String jsonString = JSON.toJSONString(msg);
+        // 站点id
+        String siteId = cmsPage.getSiteId();
+        rabbitTemplate.convertAndSend(RabbitmqConfig.EX_ROUTING_CMS_POSTPAGE, siteId, jsonString);
+    }
+
+    /** 保存html到GridFS */
+    private CmsPage saveHtml(String pageId, String htmlContent) {
+        // 先得到页面信息
+        CmsPage cmsPage = this.findById(pageId);
+        if (cmsPage == null) {
+            ExceptionCast.cast(CommonCode.INVALLD_PARAM);
+        }
+        ObjectId objectId = null;
+        // 将文件内容转成输入流
+        try {
+            InputStream inputStream = IOUtils.toInputStream(htmlContent, "utf-8");
+            // 将文件内容保存到GridFs
+            objectId = gridFsTemplate.store(inputStream, cmsPage.getPageName());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        // 将html文件id更新到cmsPage
+        cmsPage.setHtmlFileId(objectId.toHexString());
+        cmsPageRepository.save(cmsPage);
+        return cmsPage;
     }
 }
