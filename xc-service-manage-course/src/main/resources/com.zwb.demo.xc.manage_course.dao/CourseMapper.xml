@@ -3,6 +3,13 @@
 <mapper namespace="com.zwb.demo.xc.manage_course.dao.CourseMapper">
     <select id="findCourseBaseById" parameterType="java.lang.String"
             resultType="com.zwb.demo.xc.domain.course.CourseBase">
-        select * from course_base where id = #{id}
+        select *
+        from course_base
+        where id = #{id}
+    </select>
+    <select id="findCourseList" resultType="com.zwb.demo.xc.domain.course.CourseBase"
+            parameterType="com.zwb.demo.xc.domain.course.request.CourseListRequest">
+        select course_base.*, (SELECT pic FROM course_pic WHERE courseid = course_base.id) pic
+        from course_base
     </select>
 </mapper>

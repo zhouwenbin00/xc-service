@@ -7,7 +7,8 @@ spring:
     druid:
       url: jdbc:mysql://localhost:3306/xc_course?characterEncoding=utf-8
       username: root
-      password: 123
+      password: root123456
+
       driverClassName: com.mysql.jdbc.Driver
       initialSize: 5  #初始建立连接数量
       minIdle: 5  #最小连接数量
@@ -19,3 +20,5 @@ spring:
       minEvictableIdleTimeMillis: 300000  #连接在连接池的最小生存时间（毫秒）
 mybatis:
   mapper-locations: classpath:/com.zwb.demo.xc.manage_course.dao/*.xml
+pagehelper:
+  helper-dialect: mysql
