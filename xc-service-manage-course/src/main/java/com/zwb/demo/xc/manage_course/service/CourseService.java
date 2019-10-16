@@ -9,6 +9,7 @@ import com.zwb.demo.xc.common.model.response.QueryResult;
 import com.zwb.demo.xc.common.model.response.ResponseResult;
 import com.zwb.demo.xc.domain.course.CourseBase;
 import com.zwb.demo.xc.domain.course.CourseMarket;
+import com.zwb.demo.xc.domain.course.CoursePic;
 import com.zwb.demo.xc.domain.course.Teachplan;
 import com.zwb.demo.xc.domain.course.ext.TeachplanNode;
 import com.zwb.demo.xc.domain.course.request.CourseListRequest;
@@ -34,6 +35,7 @@ public class CourseService {
     @Resource CourseBaseRepository courseBaseRepository;
     @Resource CourseMapper courseMapper;
     @Resource CourseMarketRepository courseMarketRepository;
+    @Resource CoursePicRepository coursePicRepository;
 
     // 查询课程计划列表
     public TeachplanNode findTeachplanList(String courseId) {
@@ -171,5 +173,35 @@ public class CourseService {
             courseMarketRepository.save(one);
         }
         return new ResponseResult(CommonCode.SUCCESS);
+    }
+    // 添加课程图片
+    @Transactional
+    public ResponseResult addCoursePic(String id, String pic) {
+        Optional<CoursePic> optional = coursePicRepository.findById(id);
+        CoursePic coursePic = null;
+        if (optional.isPresent()) {
+            coursePic = optional.get();
+        }
+        if (coursePic == null) {
+            coursePic = new CoursePic();
+        }
+        coursePic.setCourseid(id);
+        coursePic.setPic(pic);
+        coursePicRepository.save(coursePic);
+        return new ResponseResult(CommonCode.SUCCESS);
+    }
+
+    public CoursePic findCoursePic(String courseId) {
+        Optional<CoursePic> optional = coursePicRepository.findById(courseId);
+        return optional.orElse(null);
+    }
+
+    @Transactional
+    public ResponseResult deleteCoursePic(String courseId) {
+        long result = coursePicRepository.deleteByCourseid(courseId);
+        if (result > 0) {
+            return new ResponseResult(CommonCode.SUCCESS);
+        }
+        return new ResponseResult(CommonCode.FAIL);
     }
 }

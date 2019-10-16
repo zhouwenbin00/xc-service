@@ -5,6 +5,7 @@ import com.zwb.demo.xc.common.model.response.QueryResponseResult;
 import com.zwb.demo.xc.common.model.response.ResponseResult;
 import com.zwb.demo.xc.domain.course.CourseBase;
 import com.zwb.demo.xc.domain.course.CourseMarket;
+import com.zwb.demo.xc.domain.course.CoursePic;
 import com.zwb.demo.xc.domain.course.Teachplan;
 import com.zwb.demo.xc.domain.course.ext.TeachplanNode;
 import com.zwb.demo.xc.domain.course.request.CourseListRequest;
@@ -72,5 +73,24 @@ public class CourseController implements CourseControllerApi {
     public ResponseResult updateCourseMarket(
             @PathVariable String id, @RequestBody CourseMarket courseMarket) {
         return courseService.updateCourseMarket(id, courseMarket);
+    }
+
+    @Override
+    @PostMapping("/coursepic/add")
+    public ResponseResult addCoursePic(
+            @RequestParam("courseId") String id, @RequestParam("pic") String pic) {
+        return courseService.addCoursePic(id, pic);
+    }
+
+    @Override
+    @GetMapping("/coursepic/list/{courseId}")
+    public CoursePic findCoursePic(@PathVariable("courseId") String courseId) {
+        return courseService.findCoursePic(courseId);
+    }
+
+    @Override
+    @DeleteMapping("/coursepic/delete")
+    public ResponseResult deleteCoursePic(@RequestParam("courseId") String courseId) {
+        return courseService.deleteCoursePic(courseId);
     }
 }
