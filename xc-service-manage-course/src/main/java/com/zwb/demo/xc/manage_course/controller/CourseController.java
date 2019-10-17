@@ -7,9 +7,11 @@ import com.zwb.demo.xc.domain.course.CourseBase;
 import com.zwb.demo.xc.domain.course.CourseMarket;
 import com.zwb.demo.xc.domain.course.CoursePic;
 import com.zwb.demo.xc.domain.course.Teachplan;
+import com.zwb.demo.xc.domain.course.ext.CourseView;
 import com.zwb.demo.xc.domain.course.ext.TeachplanNode;
 import com.zwb.demo.xc.domain.course.request.CourseListRequest;
 import com.zwb.demo.xc.domain.course.response.AddCourseResult;
+import com.zwb.demo.xc.domain.course.response.CoursePublishResult;
 import com.zwb.demo.xc.manage_course.service.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -92,5 +94,17 @@ public class CourseController implements CourseControllerApi {
     @DeleteMapping("/coursepic/delete")
     public ResponseResult deleteCoursePic(@RequestParam("courseId") String courseId) {
         return courseService.deleteCoursePic(courseId);
+    }
+
+    @Override
+    @GetMapping("/courseview/{id}")
+    public CourseView getCourseView(@PathVariable("id") String courseId) {
+        return courseService.getCourseView(courseId);
+    }
+
+    @Override
+    @PostMapping("/preview/{id}")
+    public CoursePublishResult preview(@PathVariable("id") String id) {
+        return courseService.preview(id);
     }
 }

@@ -14,6 +14,7 @@
         <module>xc-service-manage-cms-client</module>
         <module>test-fastdfs</module>
         <module>xc-service-base-filesystem</module>
+        <module>xc-govern-center</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -160,8 +161,15 @@
                 <artifactId>guava</artifactId>
                 <version>${guava.version}</version>
             </dependency>
-
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>Finchley.SR1</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
         </dependencies>
+
     </dependencyManagement>
     <build>
         <finalName>${project.artifactId}</finalName>

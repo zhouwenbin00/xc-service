@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.mongodb.client.gridfs.GridFSBucket;
 import com.mongodb.client.gridfs.GridFSDownloadStream;
 import com.mongodb.client.gridfs.model.GridFSFile;
+import com.sun.org.apache.regexp.internal.RE;
 import com.zwb.demo.xc.common.exception.ExceptionCast;
 import com.zwb.demo.xc.domain.cms.CmsConfig;
 import com.zwb.demo.xc.domain.cms.CmsPage;
@@ -312,5 +313,16 @@ public class PageService {
         cmsPage.setHtmlFileId(objectId.toHexString());
         cmsPageRepository.save(cmsPage);
         return cmsPage;
+    }
+
+    public CmsPageResult savePage(CmsPage cmsPage) {
+        // 有则更新，无则新添
+        CmsPage one =
+                cmsPageRepository.findByPageNameAndSiteIdAndPageWebPath(
+                        cmsPage.getPageName(), cmsPage.getSiteId(), cmsPage.getPageWebPath());
+        if (one != null) {
+            return this.update(one.getPageId(), cmsPage);
+        }
+        return this.addCmsPage(cmsPage);
     }
 }

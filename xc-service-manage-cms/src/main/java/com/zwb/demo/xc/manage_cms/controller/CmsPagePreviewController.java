@@ -23,6 +23,7 @@ public class CmsPagePreviewController extends BaseController {
     public void preview(@PathVariable("pageId") String pageId) throws IOException {
         // 执行静态化
         String pageHtml = pageService.getPageHtml(pageId);
+        response.setHeader("Content-type", "text/html;charset=utf-8");
         ServletOutputStream outputStream = response.getOutputStream();
         outputStream.write(pageHtml.getBytes(StandardCharsets.UTF_8));
     }

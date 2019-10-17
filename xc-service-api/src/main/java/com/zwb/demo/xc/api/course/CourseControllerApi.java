@@ -7,9 +7,11 @@ import com.zwb.demo.xc.domain.course.CourseMarket;
 import com.zwb.demo.xc.domain.course.CoursePic;
 import com.zwb.demo.xc.domain.course.Teachplan;
 import com.zwb.demo.xc.domain.course.ext.CourseInfo;
+import com.zwb.demo.xc.domain.course.ext.CourseView;
 import com.zwb.demo.xc.domain.course.ext.TeachplanNode;
 import com.zwb.demo.xc.domain.course.request.CourseListRequest;
 import com.zwb.demo.xc.domain.course.response.AddCourseResult;
+import com.zwb.demo.xc.domain.course.response.CoursePublishResult;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
@@ -49,4 +51,10 @@ public interface CourseControllerApi {
 
     @ApiOperation("删除课程图片")
     ResponseResult deleteCoursePic(String courseId);
+
+    @ApiOperation("课程视图查询")
+    CourseView getCourseView(String id);
+
+    @ApiOperation("预览课程")
+    CoursePublishResult preview(String id);
 }

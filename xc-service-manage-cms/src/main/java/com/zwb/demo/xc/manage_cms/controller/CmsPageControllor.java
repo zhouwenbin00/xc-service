@@ -66,4 +66,10 @@ public class CmsPageControllor implements CmsPageControllerApi {
     public ResponseResult post(@PathVariable("pageId") String pageId) {
         return pageService.post(pageId);
     }
+
+    @Override
+    @PostMapping("/save")
+    public CmsPageResult savePage(@RequestBody CmsPage cmsPage) {
+        return pageService.savePage(cmsPage);
+    }
 }
