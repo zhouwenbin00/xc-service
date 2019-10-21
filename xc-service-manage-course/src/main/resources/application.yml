@@ -39,7 +39,7 @@ ribbon:
   ConnectTimeout: 5000 #请求连接的超时时间
   ReadTimeout: 6000 #请求处理的超时时间
 course‐publish:
-  siteId: 5b30cba5f58b4411fc6cb1e5
+  siteId: 5dad67c78acde66568cbcc9b
   templateId: 5da95887b26ddc01b3e59732
   previewUrl: http://www.demo.com/cms/preview/
   pageWebPath: /course/detail/

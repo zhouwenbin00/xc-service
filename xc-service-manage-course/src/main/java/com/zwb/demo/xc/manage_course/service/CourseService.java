@@ -9,6 +9,7 @@ import com.zwb.demo.xc.common.model.response.QueryResult;
 import com.zwb.demo.xc.common.model.response.ResponseResult;
 import com.zwb.demo.xc.domain.cms.CmsPage;
 import com.zwb.demo.xc.domain.cms.response.CmsPageResult;
+import com.zwb.demo.xc.domain.cms.response.CmsPostPageResult;
 import com.zwb.demo.xc.domain.course.CourseBase;
 import com.zwb.demo.xc.domain.course.CourseMarket;
 import com.zwb.demo.xc.domain.course.CoursePic;
@@ -274,5 +275,43 @@ public class CourseService {
         // 拼装页面url
         String url = previewUrl + pageId;
         return new CoursePublishResult(CommonCode.SUCCESS, url);
+    }
+
+    /**
+     * 发布课程
+     *
+     * @param courseid
+     * @return
+     */
+    public CoursePublishResult publish(String courseid) {
+        CourseBase coursebase = this.getCoursebaseById(courseid);
+        // 调用cms一键发布课程到服务器
+        // 准备cmsPage信息
+        CmsPage cmsPage = new CmsPage();
+        cmsPage.setSiteId(publish_siteId);
+        cmsPage.setTemplateId(publish_templateId);
+        cmsPage.setPageWebPath(publish_page_webpath);
+        cmsPage.setPagePhysicalPath(publish_page_physicalpath);
+        cmsPage.setPageName(courseid + ".html");
+        cmsPage.setPageAliase(coursebase.getName());
+        cmsPage.setDataUrl(publish_dataUrlPre + courseid);
+        CmsPostPageResult cmsPostPageResult = cmsPageClient.postPageQuick(cmsPage);
+        if (!cmsPostPageResult.isSuccess()) {
+            ExceptionCast.cast(CommonCode.FAIL);
+        }
+        // 修改课程的发布状态为已发布
+        saveCoursePubState(courseid);
+        // 缓存课程信息。。
+        // 得到页面url
+        String pageUrl = cmsPostPageResult.getPageUrl();
+        return new CoursePublishResult(CommonCode.SUCCESS, pageUrl);
+    }
+
+    // 更改课程状态为已发布
+    private CourseBase saveCoursePubState(String courseid) {
+        CourseBase coursebase = this.getCoursebaseById(courseid);
+        coursebase.setStatus("202002");
+        courseBaseRepository.save(coursebase);
+        return coursebase;
     }
 }

@@ -1,7 +1,7 @@
 {
-  "_id": {
-    "$oid": "5a925be7b00ffc4b3c1578b5"
-  },
+  "_id": ObjectId(
+  "5a925be7b00ffc4b3c1578b5"
+  ),
   "_class": "com.zwb.demo.xc.domain.cms.CmsTemplate",
   "siteId": "5a751fab6abb5044e0d19ea1",
   "templateName": "课程详情页面",
@@ -9,9 +9,9 @@
   "templateFileId": "5ad8a51f68db5240b42e5fea"
 }
 {
-  "_id": {
-    "$oid": "5a962b52b00ffc514038faf7"
-  },
+  "_id": ObjectId(
+  "5a962b52b00ffc514038faf7"
+  ),
   "_class": "com.zwb.demo.xc.domain.cms.CmsTemplate",
   "siteId": "5a751fab6abb5044e0d19ea1",
   "templateName": "首页",
@@ -19,9 +19,9 @@
   "templateFileId": "5a962b52b00ffc514038faf5"
 }
 {
-  "_id": {
-    "$oid": "5a962bf8b00ffc514038fafa"
-  },
+  "_id": ObjectId(
+  "5a962bf8b00ffc514038fafa"
+  ),
   "_class": "com.zwb.demo.xc.domain.cms.CmsTemplate",
   "siteId": "5a751fab6abb5044e0d19ea1",
   "templateName": "轮播图",
@@ -29,9 +29,9 @@
   "templateFileId": "5a962bf8b00ffc514038faf8"
 }
 {
-  "_id": {
-    "$oid": "5a962c16b00ffc514038fafd"
-  },
+  "_id": ObjectId(
+  "5a962c16b00ffc514038fafd"
+  ),
   "_class": "com.zwb.demo.xc.domain.cms.CmsTemplate",
   "siteId": "5a751fab6abb5044e0d19ea1",
   "templateName": "分类导航",
@@ -39,9 +39,9 @@
   "templateFileId": "5a962c16b00ffc514038fafb"
 }
 {
-  "_id": {
-    "$oid": "5abf2a8f5b05aa2ebcfce6b5"
-  },
+  "_id": ObjectId(
+  "5abf2a8f5b05aa2ebcfce6b5"
+  ),
   "_class": "com.zwb.demo.xc.domain.cms.CmsTemplate",
   "siteId": "5a751fab6abb5044e0d19ea1",
   "templateName": "测试模板",
@@ -49,9 +49,9 @@
   "templateFileId": "templatefile01"
 }
 {
-  "_id": {
-    "$oid": "5abf57965b05aa2ebcfce6d1"
-  },
+  "_id": ObjectId(
+  "5abf57965b05aa2ebcfce6d1"
+  ),
   "_class": "com.zwb.demo.xc.domain.cms.CmsTemplate",
   "siteId": "5a751fab6abb5044e0d19ea1",
   "templateName": "测试模板",
@@ -59,9 +59,9 @@
   "templateFileId": "5abf3d515b05aa0444d79840"
 }
 {
-  "_id": {
-    "$oid": "5ad9a24d68db5239b8fef199"
-  },
+  "_id": ObjectId(
+  "5ad9a24d68db5239b8fef199"
+  ),
   "_class": "com.zwb.demo.xc.domain.cms.CmsTemplate",
   "siteId": "5a751fab6abb5044e0d19ea1",
   "templateName": "课程详情页面测试",
@@ -69,12 +69,32 @@
   "templateFileId": "5ad9a41d68db522910e00846"
 }
 {
-  "_id": {
-    "$oid": "5aec5dd70e661808240ab7a6"
-  },
+  "_id": ObjectId(
+  "5aec5dd70e661808240ab7a6"
+  ),
   "_class": "com.zwb.demo.xc.domain.cms.CmsTemplate",
   "siteId": "5a751fab6abb5044e0d19ea1",
   "templateName": "课程详情正式模板",
   "templateParameter": "courseid",
   "templateFileId": "5aec5d8c0e6618376c08e47d"
+}
+{
+  "_id": ObjectId(
+  "5da95887b26ddc01b3e59732"
+  ),
+  "_class": "com.zwb.demo.xc.domain.cms.CmsTemplate",
+  "siteId": "5a751fab6abb5044e0d19ea1",
+  "templateName": "课程详情正式模板",
+  "templateParameter": "courseid",
+  "templateFileId": "5da958423638ff2440e9bd01"
+}
+{
+  "_id": ObjectId(
+  "5da95f58b26ddc01b3e59734"
+  ),
+  "_class": "com.zwb.demo.xc.domain.cms.CmsTemplate",
+  "siteId": "5a751fab6abb5044e0d19ea1",
+  "templateName": "课程详情正式模板",
+  "templateParameter": "courseid",
+  "templateFileId": "5da95f3f3638ff3bac7a0046"
 }

@@ -4,6 +4,7 @@ import com.zwb.demo.xc.api.cms.CmsPageControllerApi;
 import com.zwb.demo.xc.domain.cms.CmsPage;
 import com.zwb.demo.xc.domain.cms.request.QueryPageRequest;
 import com.zwb.demo.xc.domain.cms.response.CmsPageResult;
+import com.zwb.demo.xc.domain.cms.response.CmsPostPageResult;
 import com.zwb.demo.xc.manage_cms.service.PageService;
 import com.zwb.demo.xc.common.model.response.QueryResponseResult;
 import com.zwb.demo.xc.common.model.response.ResponseResult;
@@ -64,12 +65,18 @@ public class CmsPageControllor implements CmsPageControllerApi {
     @Override
     @PostMapping("/postpage/{pageId}")
     public ResponseResult post(@PathVariable("pageId") String pageId) {
-        return pageService.post(pageId);
+        return pageService.postPage(pageId);
     }
 
     @Override
     @PostMapping("/save")
     public CmsPageResult savePage(@RequestBody CmsPage cmsPage) {
         return pageService.savePage(cmsPage);
+    }
+
+    @Override
+    @PostMapping("/postPageQuick")
+    public CmsPostPageResult postPageQuick(@RequestBody CmsPage cmsPage) {
+        return pageService.postPageQuick(cmsPage);
     }
 }

@@ -4,14 +4,15 @@ import com.alibaba.fastjson.JSON;
 import com.mongodb.client.gridfs.GridFSBucket;
 import com.mongodb.client.gridfs.GridFSDownloadStream;
 import com.mongodb.client.gridfs.model.GridFSFile;
-import com.sun.org.apache.regexp.internal.RE;
 import com.zwb.demo.xc.common.exception.ExceptionCast;
 import com.zwb.demo.xc.domain.cms.CmsConfig;
 import com.zwb.demo.xc.domain.cms.CmsPage;
+import com.zwb.demo.xc.domain.cms.CmsSite;
 import com.zwb.demo.xc.domain.cms.CmsTemplate;
 import com.zwb.demo.xc.domain.cms.request.QueryPageRequest;
 import com.zwb.demo.xc.domain.cms.response.CmsCode;
 import com.zwb.demo.xc.domain.cms.response.CmsPageResult;
+import com.zwb.demo.xc.domain.cms.response.CmsPostPageResult;
 import com.zwb.demo.xc.manage_cms.config.RabbitmqConfig;
 import com.zwb.demo.xc.manage_cms.dao.CmsConfigRepository;
 import com.zwb.demo.xc.manage_cms.dao.CmsPageRepository;
@@ -19,6 +20,7 @@ import com.zwb.demo.xc.common.model.response.CommonCode;
 import com.zwb.demo.xc.common.model.response.QueryResponseResult;
 import com.zwb.demo.xc.common.model.response.QueryResult;
 import com.zwb.demo.xc.common.model.response.ResponseResult;
+import com.zwb.demo.xc.manage_cms.dao.CmsSiteRepository;
 import com.zwb.demo.xc.manage_cms.dao.CmsTemplateRepository;
 import freemarker.cache.StringTemplateLoader;
 import freemarker.template.Configuration;
@@ -26,7 +28,6 @@ import freemarker.template.Template;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.bouncycastle.cms.CMSConfig;
 import org.bson.types.ObjectId;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,6 +56,7 @@ public class PageService {
     @Autowired CmsPageRepository cmsPageRepository;
     @Autowired CmsConfigRepository cmsConfigRepository;
     @Autowired CmsTemplateRepository cmsTemplateRepository;
+    @Autowired CmsSiteRepository cmsSiteRepository;
     @Autowired RestTemplate restTemplate;
     @Autowired GridFSBucket gridFSBucket;
     @Autowired GridFsTemplate gridFsTemplate;
@@ -267,7 +269,7 @@ public class PageService {
     }
 
     /** 发布页面 */
-    public ResponseResult post(String pageId) {
+    public ResponseResult postPage(String pageId) {
         // 执行页面静态化
         String pageHtml = this.getPageHtml(pageId);
         // 存储GridFs
@@ -324,5 +326,41 @@ public class PageService {
             return this.update(one.getPageId(), cmsPage);
         }
         return this.addCmsPage(cmsPage);
+    }
+
+    /**
+     * 一键发布
+     *
+     * @param cmsPage
+     * @return
+     */
+    public CmsPostPageResult postPageQuick(CmsPage cmsPage) {
+        // 保存cms信息到page
+        CmsPageResult save = this.savePage(cmsPage);
+        if (!save.isSuccess()) {
+            return new CmsPostPageResult(CommonCode.FAIL, null);
+        }
+        CmsPage one = save.getCmsPage();
+        String pageId = one.getPageId();
+        // 执行静态化，保存页面，发送消息
+        ResponseResult responseResult = this.postPage(pageId);
+        if (!responseResult.isSuccess()) {
+            return new CmsPostPageResult(CommonCode.FAIL, null);
+        }
+        CmsSite cmsSite = this.findCmsSiteById(one.getSiteId());
+        if (cmsSite == null) {
+            ExceptionCast.cast(CommonCode.FAIL);
+        }
+        String pageUrl =
+                cmsSite.getSiteDomain()
+                        + cmsSite.getSiteWebPath()
+                        + one.getPageWebPath()
+                        + one.getPageName();
+        return new CmsPostPageResult(CommonCode.SUCCESS, pageUrl);
+    }
+
+    public CmsSite findCmsSiteById(String siteId) {
+        Optional<CmsSite> cmsSiteOptional = cmsSiteRepository.findById(siteId);
+        return cmsSiteOptional.orElse(null);
     }
 }

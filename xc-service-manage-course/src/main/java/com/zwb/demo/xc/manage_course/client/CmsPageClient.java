@@ -2,6 +2,7 @@ package com.zwb.demo.xc.manage_course.client;
 
 import com.zwb.demo.xc.domain.cms.CmsPage;
 import com.zwb.demo.xc.domain.cms.response.CmsPageResult;
+import com.zwb.demo.xc.domain.cms.response.CmsPostPageResult;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,4 +19,8 @@ public interface CmsPageClient {
 
     @PostMapping("/cms/page/save")
     CmsPageResult save(@RequestBody CmsPage cmsPage);
+
+    // 一键发布接口
+    @PostMapping("/cms/page/postPageQuick")
+    CmsPostPageResult postPageQuick(@RequestBody CmsPage cmsPage);
 }

@@ -1,0 +1,95 @@
+{
+  "_id": "group1/M00/00/00/rBgUw12m25yAOznlAAl5WLU-YRY858.jpg",
+  "filePath": "group1/M00/00/00/rBgUw12m25yAOznlAAl5WLU-YRY858.jpg",
+  "fileSize": {
+    "$numberLong": "620888"
+  },
+  "fileName": "Tulips.jpg",
+  "fileType": "image/jpeg",
+  "fileWidth": 0,
+  "fileHeight": 0,
+  "filetag": "course",
+  "_class": "com.zwb.demo.xc.domain.filesystem.FileSystem"
+}
+{
+  "_id": "group1/M00/00/00/rBgUw12m3LaAJj44AAzodQCbVVc612.jpg",
+  "filePath": "group1/M00/00/00/rBgUw12m3LaAJj44AAzodQCbVVc612.jpg",
+  "fileSize": {
+    "$numberLong": "845941"
+  },
+  "fileName": "Desert.jpg",
+  "fileType": "image/jpeg",
+  "fileWidth": 0,
+  "fileHeight": 0,
+  "filetag": "course",
+  "_class": "com.zwb.demo.xc.domain.filesystem.FileSystem"
+}
+{
+  "_id": "group1/M00/00/00/rBgUw12m3dqARN7gAAl5WLU-YRY566.jpg",
+  "filePath": "group1/M00/00/00/rBgUw12m3dqARN7gAAl5WLU-YRY566.jpg",
+  "fileSize": {
+    "$numberLong": "620888"
+  },
+  "fileName": "Tulips.jpg",
+  "fileType": "image/jpeg",
+  "fileWidth": 0,
+  "fileHeight": 0,
+  "filetag": "course",
+  "_class": "com.zwb.demo.xc.domain.filesystem.FileSystem"
+}
+{
+  "_id": "group1/M00/00/00/rBgUw12m30yAHLMhAAvea_OGt2M132.jpg",
+  "filePath": "group1/M00/00/00/rBgUw12m30yAHLMhAAvea_OGt2M132.jpg",
+  "fileSize": {
+    "$numberLong": "777835"
+  },
+  "fileName": "Penguins.jpg",
+  "fileType": "image/jpeg",
+  "fileWidth": 0,
+  "fileHeight": 0,
+  "businesskey": "test",
+  "filetag": "course",
+  "_class": "com.zwb.demo.xc.domain.filesystem.FileSystem"
+}
+{
+  "_id": "group1/M00/00/00/rBgUw12m4dSALuNgAAvqH_kipG8275.jpg",
+  "filePath": "group1/M00/00/00/rBgUw12m4dSALuNgAAvqH_kipG8275.jpg",
+  "fileSize": {
+    "$numberLong": "780831"
+  },
+  "fileName": "Koala.jpg",
+  "fileType": "image/jpeg",
+  "fileWidth": 0,
+  "fileHeight": 0,
+  "businesskey": "test",
+  "filetag": "course",
+  "_class": "com.zwb.demo.xc.domain.filesystem.FileSystem"
+}
+{
+  "_id": "group1/M00/00/00/rBgUw12m4--ABJ2zAAiQfKHDaaQ384.jpg",
+  "filePath": "group1/M00/00/00/rBgUw12m4--ABJ2zAAiQfKHDaaQ384.jpg",
+  "fileSize": {
+    "$numberLong": "561276"
+  },
+  "fileName": "Lighthouse.jpg",
+  "fileType": "image/jpeg",
+  "fileWidth": 0,
+  "fileHeight": 0,
+  "businesskey": "test",
+  "filetag": "course",
+  "_class": "com.zwb.demo.xc.domain.filesystem.FileSystem"
+}
+{
+  "_id": "group1/M00/00/00/rBgUw12m5gqAWSWaAAiQfKHDaaQ276.jpg",
+  "filePath": "group1/M00/00/00/rBgUw12m5gqAWSWaAAiQfKHDaaQ276.jpg",
+  "fileSize": {
+    "$numberLong": "561276"
+  },
+  "fileName": "Lighthouse.jpg",
+  "fileType": "image/jpeg",
+  "fileWidth": 0,
+  "fileHeight": 0,
+  "businesskey": "test",
+  "filetag": "course",
+  "_class": "com.zwb.demo.xc.domain.filesystem.FileSystem"
+}

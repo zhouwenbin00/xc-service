@@ -1,14 +1,28 @@
 {
-  "_id": {
-    "$oid": "5a751fab6abb5044e0d19ea1"
-  },
+  "_id": ObjectId(
+  "5a751fab6abb5044e0d19ea1"
+  ),
   "_class": "com.zwb.demo.xc.domain.cms.CmsSite",
   "siteName": "门户主站",
   "siteDomain": "http://localhost",
   "sitePort": "80",
   "siteWebPath": "/",
-  "siteCreateTime": {
-    "$date": "2018-02-03T02:34:19.113+0000"
-  },
+  "siteCreateTime": ISODate(
+  "2018-02-03T02:34:19.113+0000"
+  ),
   "sitePhysicalPath": "/F"
+}
+{
+  "_id": ObjectId(
+  "5dad67c78acde66568cbcc9b"
+  ),
+  "_class": "com.zwb.demo.xc.domain.cms.CmsSite",
+  "siteName": "课程详情站点",
+  "siteDomain": "http://localhost",
+  "sitePort": "80",
+  "siteWebPath": "",
+  "siteCreateTime": ISODate(
+  "2018-02-03T02:34:19.113+0000"
+  ),
+  "sitePhysicalPath": "E:\\IdeaProjects\\other\\xc-ui-pc-static-portal"
 }

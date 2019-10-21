@@ -5,6 +5,7 @@ import com.zwb.demo.xc.domain.cms.request.QueryPageRequest;
 import com.zwb.demo.xc.domain.cms.response.CmsPageResult;
 import com.zwb.demo.xc.common.model.response.QueryResponseResult;
 import com.zwb.demo.xc.common.model.response.ResponseResult;
+import com.zwb.demo.xc.domain.cms.response.CmsPostPageResult;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -50,4 +51,7 @@ public interface CmsPageControllerApi {
 
     @ApiOperation("保存页面")
     CmsPageResult savePage(CmsPage cmsPage);
+
+    @ApiOperation("一键发布页面")
+    CmsPostPageResult postPageQuick(CmsPage cmsPage);
 }
