@@ -1,25 +1,20 @@
 package com.zwb.demo.xc.test.search;
 
 import com.zwb.demo.xc.search.SearchApplication;
-import org.elasticsearch.action.DocWriteResponse;
-import org.elasticsearch.action.admin.indices.create.CreateIndexRequest;
-import org.elasticsearch.action.admin.indices.create.CreateIndexResponse;
-import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest;
-import org.elasticsearch.action.admin.indices.delete.DeleteIndexResponse;
-import org.elasticsearch.action.delete.DeleteRequest;
-import org.elasticsearch.action.delete.DeleteResponse;
-import org.elasticsearch.action.get.GetRequest;
-import org.elasticsearch.action.get.GetResponse;
-import org.elasticsearch.action.index.IndexRequest;
-import org.elasticsearch.action.index.IndexResponse;
-import org.elasticsearch.action.update.UpdateRequest;
-import org.elasticsearch.action.update.UpdateResponse;
-import org.elasticsearch.client.IndicesClient;
+import org.elasticsearch.action.search.SearchRequest;
+import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.RestClient;
 import org.elasticsearch.client.RestHighLevelClient;
-import org.elasticsearch.common.settings.Settings;
-import org.elasticsearch.common.xcontent.XContentType;
-import org.elasticsearch.rest.RestStatus;
+import org.elasticsearch.common.text.Text;
+import org.elasticsearch.index.query.BoolQueryBuilder;
+import org.elasticsearch.index.query.MultiMatchQueryBuilder;
+import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.index.query.TermQueryBuilder;
+import org.elasticsearch.search.SearchHit;
+import org.elasticsearch.search.SearchHits;
+import org.elasticsearch.search.builder.SearchSourceBuilder;
+import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder;
+import org.elasticsearch.search.fetch.subphase.highlight.HighlightField;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -27,12 +22,12 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.annotation.Resource;
 import java.io.IOException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
 
-/** Created by zwb on 2019/10/21 21:29 */
+/** Created by zwb on 2019/10/22 11:33 */
 @SpringBootTest(classes = {SearchApplication.class})
 @RunWith(SpringRunner.class)
 public class TestSearch {
@@ -40,115 +35,504 @@ public class TestSearch {
     @Resource RestHighLevelClient client;
     @Resource RestClient restClient;
 
-    /** 删除索引库 */
+    /** 搜索全部记录 */
     @Test
-    public void test1() throws IOException {
-        // 创建删除索引对象
-        DeleteIndexRequest deleteIndexRequest = new DeleteIndexRequest("xc_course");
-        // 操作索引客户端
-        IndicesClient indices = client.indices();
-        // 执行删除索引
-        DeleteIndexResponse delete = indices.delete(deleteIndexRequest);
-        // 得到响应
-        boolean acknowledged = delete.isAcknowledged();
-        System.out.println(acknowledged);
+    public void test1() throws IOException, ParseException {
+        // 请求搜索对象
+        SearchRequest searchRequest = new SearchRequest("xc_course");
+        // 设置类型
+        searchRequest.types("doc");
+        // 搜索源构建对象
+        SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+        // 索索全部
+        searchSourceBuilder.query(QueryBuilders.matchAllQuery());
+        // source源字段过滤
+        searchSourceBuilder.fetchSource(
+                new String[] {"name", "studymodel", "price", "timestamp"}, new String[] {});
+        // 设置搜索源
+        searchRequest.source(searchSourceBuilder);
+        // 执行搜索
+        SearchResponse searchResponse = client.search(searchRequest);
+        // 搜索匹配结果
+        SearchHits hits = searchResponse.getHits();
+        // 搜索总记录数
+        long totalHits = hits.totalHits;
+        // 匹配度较高的文档
+        SearchHit[] searchHits = hits.getHits();
+        for (SearchHit searchHit : searchHits) {
+            String id = searchHit.getId();
+            Map<String, Object> sourceAsMap = searchHit.getSourceAsMap();
+            String name = (String) sourceAsMap.get("name");
+            // 拿不到，因为设置了过滤
+            String description = (String) sourceAsMap.get("description");
+            double price = (double) sourceAsMap.get("price");
+            String timestamp = (String) sourceAsMap.get("timestamp");
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            Date parse = dateFormat.parse(timestamp);
+            System.out.println(id);
+            System.out.println(name);
+            System.out.println(description);
+            System.out.println(price);
+            System.out.println(parse);
+        }
     }
 
-    /** 创建索引库 */
+    /** 分页查询 */
     @Test
-    public void test2() throws IOException {
-        // 创键索引对象
-        CreateIndexRequest createIndexRequest = new CreateIndexRequest("xc_course");
-        // 设置索引参数
-        createIndexRequest.settings(
-                Settings.builder().put("number_of_shards", 1).put("number_of_replicas", 0).build());
-        // 设置映射
-        createIndexRequest.mapping(
-                "doc",
-                "{\n"
-                        + "    \"properties\":{\n"
-                        + "        \"name\":{\n"
-                        + "            \"type\":\"text\",\n"
-                        + "            \"analyzer\":\"ik_max_word\",\n"
-                        + "            \"search_analyzer\":\"ik_smart\"\n"
-                        + "        },\n"
-                        + "        \"description\":{\n"
-                        + "            \"type\":\"text\",\n"
-                        + "            \"analyzer\":\"ik_max_word\",\n"
-                        + "            \"search_analyzer\":\"ik_smart\"\n"
-                        + "        },\n"
-                        + "        \"studymodel\":{\n"
-                        + "            \"type\":\"keyword\"\n"
-                        + "        },\n"
-                        + "        \"price\":{\n"
-                        + "            \"type\":\"float\"\n"
-                        + "        },\n"
-                        + "        \"timestamp\":{\n"
-                        + "            \"type\":\"date\",\n"
-                        + "            \"format\":\"yyyy‐MM‐dd HH:mm:ss||yyyy‐MM‐dd||epoch_millis\"\n"
-                        + "        }\n"
-                        + "    }\n"
-                        + "}",
-                XContentType.JSON);
-        // 创建索引操作客户端
-        IndicesClient indices = client.indices();
-        CreateIndexResponse createIndexResponse = indices.create(createIndexRequest);
-        boolean acknowledged = createIndexResponse.isAcknowledged();
-        System.out.println(acknowledged);
+    public void test2() throws ParseException, IOException {
+        // 请求搜索对象
+        SearchRequest searchRequest = new SearchRequest("xc_course");
+        // 设置类型
+        searchRequest.types("doc");
+        // 搜索源构建对象
+        SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+        // -----------------------设置分页参数----------------------------------
+        int page = 1;
+        int size = 1;
+        int from = (page - 1) * size;
+        searchSourceBuilder.from(from); // 起始下标从0开始
+        searchSourceBuilder.size(size); // 每页显示记录数
+        // -----------------------设置分页参数----------------------------------
+        // 索索全部
+        searchSourceBuilder.query(QueryBuilders.matchAllQuery());
+        // source源字段过滤
+        searchSourceBuilder.fetchSource(
+                new String[] {"name", "studymodel", "price", "timestamp"}, new String[] {});
+        // 设置搜索源
+        searchRequest.source(searchSourceBuilder);
+        // 执行搜索
+        SearchResponse searchResponse = client.search(searchRequest);
+        // 搜索匹配结果
+        SearchHits hits = searchResponse.getHits();
+        // 搜索总记录数
+        long totalHits = hits.totalHits;
+        // 匹配度较高的文档
+        SearchHit[] searchHits = hits.getHits();
+        for (SearchHit searchHit : searchHits) {
+            String id = searchHit.getId();
+            Map<String, Object> sourceAsMap = searchHit.getSourceAsMap();
+            String name = (String) sourceAsMap.get("name");
+            // 拿不到，因为设置了过滤
+            String description = (String) sourceAsMap.get("description");
+            double price = (double) sourceAsMap.get("price");
+            String timestamp = (String) sourceAsMap.get("timestamp");
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            Date parse = dateFormat.parse(timestamp);
+            System.out.println(id);
+            System.out.println(name);
+            System.out.println(description);
+            System.out.println(price);
+            System.out.println(parse);
+        }
     }
 
-    /** 添加文档 */
+    /** term query */
     @Test
-    public void test3() throws IOException {
-        // 准备json数据
-        Map<String, Object> jsonMap = new HashMap<>();
-        jsonMap.put("name", "spring cloud实战");
-        jsonMap.put(
-                "description",
-                "本课程主要从四个章节进行讲解： 1.微服务架构入门 2.spring cloud 基础入门 3.实战Spring Boot 4.注册中心eureka。");
-        jsonMap.put("studymodel", "201001");
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy‐MM‐dd HH:mm:ss");
-        jsonMap.put("timestamp", dateFormat.format(new Date()));
-        jsonMap.put("price", 5.6f);
-        // 索引请求对象
-        IndexRequest indexRequest = new IndexRequest("xc_course", "doc");
-        // 指定索引文档内容
-        indexRequest.source(jsonMap);
-        // 索引响应对象
-        IndexResponse indexResponse = client.index(indexRequest);
-        DocWriteResponse.Result result = indexResponse.getResult();
-        System.out.println(result);
+    public void test3() throws ParseException, IOException {
+        // 请求搜索对象
+        SearchRequest searchRequest = new SearchRequest("xc_course");
+        // 设置类型
+        searchRequest.types("doc");
+        // 搜索源构建对象
+        SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+        // 设置分页参数
+        int page = 1;
+        int size = 1;
+        int from = (page - 1) * size;
+        searchSourceBuilder.from(from); // 起始下标从0开始
+        searchSourceBuilder.size(size); // 每页显示记录数
+        // 索索全部
+        // ------------------ term query----------------------
+        searchSourceBuilder.query(QueryBuilders.termQuery("name", "spring"));
+        // ------------------ term query----------------------
+        // source源字段过滤
+        searchSourceBuilder.fetchSource(
+                new String[] {"name", "studymodel", "price", "timestamp"}, new String[] {});
+        // 设置搜索源
+        searchRequest.source(searchSourceBuilder);
+        // 执行搜索
+        SearchResponse searchResponse = client.search(searchRequest);
+        // 搜索匹配结果
+        SearchHits hits = searchResponse.getHits();
+        // 搜索总记录数
+        long totalHits = hits.totalHits;
+        System.out.println(totalHits);
+        // 匹配度较高的文档
+        SearchHit[] searchHits = hits.getHits();
+        for (SearchHit searchHit : searchHits) {
+            String id = searchHit.getId();
+            Map<String, Object> sourceAsMap = searchHit.getSourceAsMap();
+            String name = (String) sourceAsMap.get("name");
+            // 拿不到，因为设置了过滤
+            String description = (String) sourceAsMap.get("description");
+            double price = (double) sourceAsMap.get("price");
+            String timestamp = (String) sourceAsMap.get("timestamp");
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            Date parse = dateFormat.parse(timestamp);
+            System.out.println(id);
+            System.out.println(name);
+            System.out.println(description);
+            System.out.println(price);
+            System.out.println(parse);
+        }
     }
 
-    /** 查询文档 */
+    /** 根据id查询 */
     @Test
-    public void test4() throws IOException {
-        GetRequest getRequest = new GetRequest("xc_course", "doc", "Qn6W7m0BOtAaohuCFn3z");
-        GetResponse getResponse = client.get(getRequest);
-        boolean exists = getResponse.isExists();
-        Map<String, Object> sourceAsMap = getResponse.getSourceAsMap();
-        System.out.println(sourceAsMap);
+    public void test4() throws IOException, ParseException {
+        // 请求搜索对象
+        SearchRequest searchRequest = new SearchRequest("xc_course");
+        // 设置类型
+        searchRequest.types("doc");
+        // 搜索源构建对象
+        SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+        int page = 1;
+        int size = 1;
+        int from = (page - 1) * size;
+        searchSourceBuilder.from(from); // 起始下标从0开始
+        searchSourceBuilder.size(size); // 每页显示记录数
+        // 索索全部
+        // -------------------------根据id查询------------------------------
+        // 定义id
+        String[] ids = new String[] {"1", "2"};
+        searchSourceBuilder.query(QueryBuilders.termsQuery("_id", ids));
+        // -------------------------根据id查询------------------------------
+        // source源字段过滤
+        searchSourceBuilder.fetchSource(
+                new String[] {"name", "studymodel", "price", "timestamp"}, new String[] {});
+        // 设置搜索源
+        searchRequest.source(searchSourceBuilder);
+        // 执行搜索
+        SearchResponse searchResponse = client.search(searchRequest);
+        // 搜索匹配结果
+        SearchHits hits = searchResponse.getHits();
+        // 搜索总记录数
+        long totalHits = hits.totalHits;
+        System.out.println(totalHits);
+        // 匹配度较高的文档
+        SearchHit[] searchHits = hits.getHits();
+        for (SearchHit searchHit : searchHits) {
+            String id = searchHit.getId();
+            Map<String, Object> sourceAsMap = searchHit.getSourceAsMap();
+            String name = (String) sourceAsMap.get("name");
+            // 拿不到，因为设置了过滤
+            String description = (String) sourceAsMap.get("description");
+            double price = (double) sourceAsMap.get("price");
+            String timestamp = (String) sourceAsMap.get("timestamp");
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            Date parse = dateFormat.parse(timestamp);
+            System.out.println(id);
+            System.out.println(name);
+            System.out.println(description);
+            System.out.println(price);
+            System.out.println(parse);
+        }
     }
 
-    /** 更新文档 */
+    /** match query */
     @Test
-    public void test5() throws IOException {
-        UpdateRequest updateRequest = new UpdateRequest("xc_course", "doc", "Qn6W7m0BOtAaohuCFn3z");
-        Map<String, String> map = new HashMap<>();
-        map.put("name", "spring cloud实战");
-        updateRequest.doc(map);
-        UpdateResponse update = client.update(updateRequest);
-        RestStatus status = update.status();
-        System.out.println(status);
+    public void test5() throws ParseException, IOException {
+        // 请求搜索对象
+        SearchRequest searchRequest = new SearchRequest("xc_course");
+        // 设置类型
+        searchRequest.types("doc");
+        // 搜索源构建对象
+        SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+        int page = 1;
+        int size = 1;
+        int from = (page - 1) * size;
+        searchSourceBuilder.from(from); // 起始下标从0开始
+        searchSourceBuilder.size(size); // 每页显示记录数
+        // 索索全部
+        // ----------------- match query -------------------
+        searchSourceBuilder.query(
+                QueryBuilders.matchQuery("description", "spring开发框架").minimumShouldMatch("70%"));
+        // ----------------- match query -------------------
+        // source源字段过滤
+        searchSourceBuilder.fetchSource(
+                new String[] {"name", "studymodel", "price", "timestamp"}, new String[] {});
+        // 设置搜索源
+        searchRequest.source(searchSourceBuilder);
+        // 执行搜索
+        SearchResponse searchResponse = client.search(searchRequest);
+        // 搜索匹配结果
+        SearchHits hits = searchResponse.getHits();
+        // 搜索总记录数
+        long totalHits = hits.totalHits;
+        System.out.println(totalHits);
+        // 匹配度较高的文档
+        SearchHit[] searchHits = hits.getHits();
+        for (SearchHit searchHit : searchHits) {
+            String id = searchHit.getId();
+            Map<String, Object> sourceAsMap = searchHit.getSourceAsMap();
+            String name = (String) sourceAsMap.get("name");
+            // 拿不到，因为设置了过滤
+            String description = (String) sourceAsMap.get("description");
+            double price = (double) sourceAsMap.get("price");
+            String timestamp = (String) sourceAsMap.get("timestamp");
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            Date parse = dateFormat.parse(timestamp);
+            System.out.println(id);
+            System.out.println(name);
+            System.out.println(description);
+            System.out.println(price);
+            System.out.println(parse);
+        }
     }
 
-    /** 根据id删除文档 */
+    /** multi_match query 可以设置多个词 */
     @Test
-    public void test6() throws IOException { // 删除文档id
-        String id = "Qn6W7m0BOtAaohuCFn3z"; // 删除索引请求对象
-        DeleteRequest deleteRequest = new DeleteRequest("xc_course", "doc", id); // 响应对象
-        DeleteResponse deleteResponse = client.delete(deleteRequest); // 获取响应结果
-        DocWriteResponse.Result result = deleteResponse.getResult();
-        System.out.println(result);
+    public void test6() throws IOException, ParseException {
+        // 请求搜索对象
+        SearchRequest searchRequest = new SearchRequest("xc_course");
+        // 设置类型
+        searchRequest.types("doc");
+        // 搜索源构建对象
+        SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+        int page = 1;
+        int size = 1;
+        int from = (page - 1) * size;
+        searchSourceBuilder.from(from); // 起始下标从0开始
+        searchSourceBuilder.size(size); // 每页显示记录数
+        // 索索全部
+        // ----------------- multi_match query -------------------
+        searchSourceBuilder.query(
+                QueryBuilders.multiMatchQuery("spring css", "description", "name")
+                        .minimumShouldMatch("70%")
+                        .field("name", 10));
+        // ----------------- multi_match query -------------------
+        // source源字段过滤
+        searchSourceBuilder.fetchSource(
+                new String[] {"name", "studymodel", "price", "timestamp"}, new String[] {});
+        // 设置搜索源
+        searchRequest.source(searchSourceBuilder);
+        // 执行搜索
+        SearchResponse searchResponse = client.search(searchRequest);
+        // 搜索匹配结果
+        SearchHits hits = searchResponse.getHits();
+        // 搜索总记录数
+        long totalHits = hits.totalHits;
+        System.out.println(totalHits);
+        // 匹配度较高的文档
+        SearchHit[] searchHits = hits.getHits();
+        for (SearchHit searchHit : searchHits) {
+            String id = searchHit.getId();
+            Map<String, Object> sourceAsMap = searchHit.getSourceAsMap();
+            String name = (String) sourceAsMap.get("name");
+            // 拿不到，因为设置了过滤
+            String description = (String) sourceAsMap.get("description");
+            double price = (double) sourceAsMap.get("price");
+            String timestamp = (String) sourceAsMap.get("timestamp");
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            Date parse = dateFormat.parse(timestamp);
+            System.out.println(id);
+            System.out.println(name);
+            System.out.println(description);
+            System.out.println(price);
+            System.out.println(parse);
+        }
+    }
+
+    /** boolean query */
+    @Test
+    public void test7() throws IOException, ParseException {
+        // 请求搜索对象
+        SearchRequest searchRequest = new SearchRequest("xc_course");
+        // 设置类型
+        searchRequest.types("doc");
+        // 搜索源构建对象
+        SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+        int page = 1;
+        int size = 1;
+        int from = (page - 1) * size;
+        searchSourceBuilder.from(from); // 起始下标从0开始
+        searchSourceBuilder.size(size); // 每页显示记录数
+        // 索索全部
+        // ----------------- boolean query -------------------
+        // 定义一个multiMatchQueryBuilder
+        MultiMatchQueryBuilder multiMatchQueryBuilder =
+                QueryBuilders.multiMatchQuery("spring css", "description", "name")
+                        .minimumShouldMatch("70%")
+                        .field("name", 10);
+        // 定义一个termQueryBuilder
+        TermQueryBuilder termQueryBuilder = QueryBuilders.termQuery("studymodel", "21001");
+        // 定义一个boolQueryBuilder
+        BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
+        boolQueryBuilder.must(multiMatchQueryBuilder);
+        boolQueryBuilder.must(termQueryBuilder);
+        searchSourceBuilder.query(boolQueryBuilder);
+        // ----------------- boolean query -------------------
+        // source源字段过滤
+        searchSourceBuilder.fetchSource(
+                new String[] {"name", "studymodel", "price", "timestamp"}, new String[] {});
+        // 设置搜索源
+        searchRequest.source(searchSourceBuilder);
+        // 执行搜索
+        SearchResponse searchResponse = client.search(searchRequest);
+        // 搜索匹配结果
+        SearchHits hits = searchResponse.getHits();
+        // 搜索总记录数
+        long totalHits = hits.totalHits;
+        System.out.println(totalHits);
+        // 匹配度较高的文档
+        SearchHit[] searchHits = hits.getHits();
+        for (SearchHit searchHit : searchHits) {
+            String id = searchHit.getId();
+            Map<String, Object> sourceAsMap = searchHit.getSourceAsMap();
+            String name = (String) sourceAsMap.get("name");
+            // 拿不到，因为设置了过滤
+            String description = (String) sourceAsMap.get("description");
+            double price = (double) sourceAsMap.get("price");
+            String timestamp = (String) sourceAsMap.get("timestamp");
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            Date parse = dateFormat.parse(timestamp);
+            System.out.println(id);
+            System.out.println(name);
+            System.out.println(description);
+            System.out.println(price);
+            System.out.println(parse);
+        }
+    }
+
+    /** 过滤器 */
+    @Test
+    public void test8() throws IOException, ParseException {
+        // 请求搜索对象
+        SearchRequest searchRequest = new SearchRequest("xc_course");
+        // 设置类型
+        searchRequest.types("doc");
+        // 搜索源构建对象
+        SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+        int page = 1;
+        int size = 1;
+        int from = (page - 1) * size;
+        searchSourceBuilder.from(from); // 起始下标从0开始
+        searchSourceBuilder.size(size); // 每页显示记录数
+        // 索索全部
+        // ----------------- 过虑 -------------------
+        // 定义一个multiMatchQueryBuilder
+        MultiMatchQueryBuilder multiMatchQueryBuilder =
+                QueryBuilders.multiMatchQuery("spring css", "description", "name")
+                        .minimumShouldMatch("70%")
+                        .field("name", 10);
+        searchSourceBuilder.query(multiMatchQueryBuilder);
+        // 定义一个boolQueryBuilder
+        BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
+        boolQueryBuilder.must(searchSourceBuilder.query());
+
+        // 过虑
+        boolQueryBuilder.filter(QueryBuilders.termQuery("studymodel", "201001"));
+        boolQueryBuilder.filter(QueryBuilders.rangeQuery("price").gte(60).lte(100));
+        // ----------------- 过虑 -------------------
+        // source源字段过滤
+        searchSourceBuilder.fetchSource(
+                new String[] {"name", "studymodel", "price", "timestamp"}, new String[] {});
+        // 设置搜索源
+        searchRequest.source(searchSourceBuilder);
+        // 执行搜索
+        SearchResponse searchResponse = client.search(searchRequest);
+        // 搜索匹配结果
+        SearchHits hits = searchResponse.getHits();
+        // 搜索总记录数
+        long totalHits = hits.totalHits;
+        System.out.println(totalHits);
+        // 匹配度较高的文档
+        SearchHit[] searchHits = hits.getHits();
+        for (SearchHit searchHit : searchHits) {
+            String id = searchHit.getId();
+            Map<String, Object> sourceAsMap = searchHit.getSourceAsMap();
+            String name = (String) sourceAsMap.get("name");
+            // 拿不到，因为设置了过滤
+            String description = (String) sourceAsMap.get("description");
+            double price = (double) sourceAsMap.get("price");
+            String timestamp = (String) sourceAsMap.get("timestamp");
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            Date parse = dateFormat.parse(timestamp);
+            System.out.println(id);
+            System.out.println(name);
+            System.out.println(description);
+            System.out.println(price);
+            System.out.println(parse);
+        }
+    }
+
+    /** 高亮 */
+    @Test
+    public void test9() throws IOException, ParseException {
+        // 请求搜索对象
+        SearchRequest searchRequest = new SearchRequest("xc_course");
+        // 设置类型
+        searchRequest.types("doc");
+        // 搜索源构建对象
+        SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+        int page = 1;
+        int size = 1;
+        int from = (page - 1) * size;
+        searchSourceBuilder.from(from); // 起始下标从0开始
+        searchSourceBuilder.size(size); // 每页显示记录数
+
+        // 索索全部
+        // 定义一个multiMatchQueryBuilder
+        MultiMatchQueryBuilder multiMatchQueryBuilder =
+                QueryBuilders.multiMatchQuery("开发框架", "description", "name")
+                        .minimumShouldMatch("70%")
+                        .field("name", 10);
+        searchSourceBuilder.query(multiMatchQueryBuilder);
+        // 定义一个boolQueryBuilder
+        BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
+        boolQueryBuilder.must(searchSourceBuilder.query());
+
+        // 过虑
+        boolQueryBuilder.filter(QueryBuilders.termQuery("studymodel", "201001"));
+        boolQueryBuilder.filter(QueryBuilders.rangeQuery("price").gte(60).lte(100));
+        // ----------------高亮-------------
+        HighlightBuilder highlightBuilder = new HighlightBuilder();
+        highlightBuilder.preTags("<tag>");
+        highlightBuilder.postTags("</tag>");
+        highlightBuilder.field("name");
+        searchSourceBuilder.highlighter(highlightBuilder);
+        // ----------------高亮-------------
+        // source源字段过滤
+        searchSourceBuilder.fetchSource(
+                new String[] {"name", "studymodel", "price", "timestamp"}, new String[] {});
+        // 设置搜索源
+        searchRequest.source(searchSourceBuilder);
+        // 执行搜索
+        SearchResponse searchResponse = client.search(searchRequest);
+        // 搜索匹配结果
+        SearchHits hits = searchResponse.getHits();
+        // 搜索总记录数
+        long totalHits = hits.totalHits;
+        System.out.println(totalHits);
+        // 匹配度较高的文档
+        SearchHit[] searchHits = hits.getHits();
+        for (SearchHit searchHit : searchHits) {
+            String id = searchHit.getId();
+            Map<String, Object> sourceAsMap = searchHit.getSourceAsMap();
+            String name = (String) sourceAsMap.get("name");
+            // 拿不到，因为设置了过滤
+            String description = (String) sourceAsMap.get("description");
+            double price = (double) sourceAsMap.get("price");
+            String timestamp = (String) sourceAsMap.get("timestamp");
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            Date parse = dateFormat.parse(timestamp);
+            System.out.println(id);
+            System.out.println(description);
+            System.out.println(price);
+            System.out.println(parse);
+            Map<String, HighlightField> highlightFields = searchHit.getHighlightFields();
+            if (highlightFields != null) {
+                HighlightField nameField = highlightFields.get("name");
+                if (nameField != null) {
+                    Text[] fragments = nameField.getFragments();
+                    StringBuffer stringBuffer = new StringBuffer();
+                    for (Text text : fragments) {
+                        stringBuffer.append(text.toString());
+                    }
+                    name = stringBuffer.toString();
+                }
+            }
+            System.out.println(name);
+        }
     }
 }

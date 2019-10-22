@@ -105,17 +105,11 @@ public class PageService {
     // 根据页面id查询页面信息
     public CmsPage findCmsPageById(String pageId) {
         Optional<CmsPage> optional = cmsPageRepository.findById(pageId);
-        if (optional.isPresent()) {
-            return optional.get();
-        }
-        return null;
+        return optional.orElse(null);
     }
     // 根据站点id查询站点信息
     public CmsSite findCmsSiteById(String siteId) {
         Optional<CmsSite> optional = cmsSiteRepository.findById(siteId);
-        if (optional.isPresent()) {
-            return optional.get();
-        }
-        return null;
+        return optional.orElse(null);
     }
 }
