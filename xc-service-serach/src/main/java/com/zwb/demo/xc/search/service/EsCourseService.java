@@ -154,13 +154,15 @@ public class EsCourseService {
             // 价格
             Float price = null;
             if (sourceAsMap.get("price") != null) {
-                price = (Float) sourceAsMap.get("price");
+                price = Float.parseFloat(String.valueOf(sourceAsMap.get("price")));
             }
             coursePub.setPrice(price);
             Float price_old = null;
             if (sourceAsMap.get("price_old") != null) {
-                price_old = (Float) sourceAsMap.get("price_old");
+                price_old = Float.parseFloat(String.valueOf(sourceAsMap.get("price_old")));
             }
+            String id = (String) sourceAsMap.get("id");
+            coursePub.setId(id);
             coursePub.setPrice_old(price_old);
             list.add(coursePub);
         }

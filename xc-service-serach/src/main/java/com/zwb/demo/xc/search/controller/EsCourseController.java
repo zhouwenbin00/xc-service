@@ -20,7 +20,7 @@ public class EsCourseController implements EsCourseControllerApi {
     public QueryResponseResult<CoursePub> list(
             @PathVariable("page") int page,
             @PathVariable("size") int size,
-            @RequestBody CourseSearchParam courseSearchParam) {
+            CourseSearchParam courseSearchParam) {
         return esCourseService.list(page, size, courseSearchParam);
     }
 }
