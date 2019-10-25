@@ -16,6 +16,7 @@
         <module>xc-service-base-filesystem</module>
         <module>xc-govern-center</module>
         <module>xc-service-serach</module>
+        <module>xc-service-manage-media</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>
