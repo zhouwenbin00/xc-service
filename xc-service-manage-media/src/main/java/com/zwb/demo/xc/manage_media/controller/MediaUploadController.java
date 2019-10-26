@@ -3,7 +3,7 @@ package com.zwb.demo.xc.manage_media.controller;
 import com.zwb.demo.xc.api.media.MediaUploadControllerApi;
 import com.zwb.demo.xc.common.model.response.ResponseResult;
 import com.zwb.demo.xc.domain.media.response.CheckChunkResult;
-import com.zwb.demo.xc.manage_media.service.MediaService;
+import com.zwb.demo.xc.manage_media.service.MediaUploadService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,7 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping("/media/upload")
 public class MediaUploadController implements MediaUploadControllerApi {
 
-    @Autowired MediaService mediaService;
+    @Autowired MediaUploadService mediaService;
 
     @Override
     @PostMapping("/register")

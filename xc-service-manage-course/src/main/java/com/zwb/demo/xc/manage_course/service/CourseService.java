@@ -16,6 +16,7 @@ import com.zwb.demo.xc.domain.course.ext.CourseView;
 import com.zwb.demo.xc.domain.course.ext.TeachplanNode;
 import com.zwb.demo.xc.domain.course.request.CourseListRequest;
 import com.zwb.demo.xc.domain.course.response.AddCourseResult;
+import com.zwb.demo.xc.domain.course.response.CourseCode;
 import com.zwb.demo.xc.domain.course.response.CoursePublishResult;
 import com.zwb.demo.xc.manage_course.client.CmsPageClient;
 import com.zwb.demo.xc.manage_course.dao.*;
@@ -24,6 +25,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import springfox.documentation.spring.web.json.Json;
@@ -42,6 +44,7 @@ public class CourseService {
     @Resource TeachplanRepository teachplanRepository;
     @Resource CourseBaseRepository courseBaseRepository;
     @Resource CoursePubRepository coursePubRepository;
+    @Resource TeachplanMediaRepository teachplanMediaRepository;
     @Resource CourseMapper courseMapper;
     @Resource CourseMarketRepository courseMarketRepository;
     @Resource CoursePicRepository coursePicRepository;
@@ -363,5 +366,34 @@ public class CourseService {
         coursebase.setStatus("202002");
         courseBaseRepository.save(coursebase);
         return coursebase;
+    }
+
+    /** 保存视频 */
+    public ResponseResult savemedia(TeachplanMedia teachplanMedia) {
+        if (teachplanMedia == null || StringUtils.isBlank(teachplanMedia.getCourseId())) {
+            ExceptionCast.cast(CommonCode.INVALLD_PARAM);
+        }
+        // 校验课程计划是否是3级
+        String teachplanId = teachplanMedia.getTeachplanId();
+        Optional<Teachplan> optional = teachplanRepository.findById(teachplanId);
+        if (!optional.isPresent()) {
+            ExceptionCast.cast(CommonCode.INVALLD_PARAM);
+        }
+        Teachplan teachplan = optional.get();
+        // 取出等级
+        String grade = teachplan.getGrade();
+        if (StringUtils.isBlank(grade) || !grade.equals("3")) {
+            ExceptionCast.cast(CourseCode.COURSE_MEDIS_TEACHPLAN_GRADE_ERROR);
+        }
+        // 查询TeachplanMedia
+        Optional<TeachplanMedia> mediaOptional = teachplanMediaRepository.findById(teachplanId);
+        TeachplanMedia one = mediaOptional.orElseGet(TeachplanMedia::new);
+        one.setMediaId(teachplanMedia.getMediaId());
+        one.setCourseId(teachplan.getCourseid());
+        one.setMediaFileOriginalName(teachplanMedia.getMediaFileOriginalName());
+        one.setMediaUrl(teachplanMedia.getMediaUrl());
+        one.setTeachplanId(teachplanId);
+        TeachplanMedia save = teachplanMediaRepository.save(one);
+        return new ResponseResult(CommonCode.SUCCESS);
     }
 }

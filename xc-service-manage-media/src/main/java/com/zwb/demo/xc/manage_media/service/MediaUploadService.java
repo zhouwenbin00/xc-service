@@ -1,14 +1,17 @@
 package com.zwb.demo.xc.manage_media.service;
 
+import com.alibaba.fastjson.JSON;
 import com.zwb.demo.xc.common.exception.ExceptionCast;
 import com.zwb.demo.xc.common.model.response.CommonCode;
 import com.zwb.demo.xc.common.model.response.ResponseResult;
 import com.zwb.demo.xc.domain.media.MediaFile;
 import com.zwb.demo.xc.domain.media.response.CheckChunkResult;
 import com.zwb.demo.xc.domain.media.response.MediaCode;
+import com.zwb.demo.xc.manage_media.config.RabbitMQConfig;
 import com.zwb.demo.xc.manage_media.dao.MediaFileRepository;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.IOUtils;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -19,13 +22,17 @@ import java.util.*;
 
 /** Created by zwb on 2019/10/25 15:14 */
 @Service
-public class MediaService {
+public class MediaUploadService {
 
     @Autowired MediaFileRepository mediaFileRepository;
+    @Autowired RabbitTemplate rabbitTemplate;
 
     // 上传文件根目录
     @Value("${xc-service-manage-media.upload-location}")
     String uploadPath;
+
+    @Value("${xc-service-manage-media.mq.routingkey-media-video}")
+    String routingkey_media_video;
 
     /**
      * 根据文件md5得到文件路径 规则： 一级目录：md5的第一个字符 二级目录：md5的第二个字符 三级目录：md5 文件名：md5+文件扩展名
@@ -193,19 +200,36 @@ public class MediaService {
         mediaFile.setFileType(fileExt);
         mediaFile.setFileStatus("301002");
         mediaFileRepository.save(mediaFile);
+        sendProcessVideoMsg(fileMd5);
+        return new ResponseResult(CommonCode.SUCCESS);
+    }
+
+    /**
+     * 发送视频处理消息
+     *
+     * @return
+     */
+    private ResponseResult sendProcessVideoMsg(String mediaId) {
+        Optional<MediaFile> optionalMediaFile = mediaFileRepository.findById(mediaId);
+        if (!optionalMediaFile.isPresent()) {
+            ExceptionCast.cast(CommonCode.FAIL);
+        }
+        // 构建消息内容
+        Map<String, String> map = new HashMap<>();
+        map.put("mediaId", mediaId);
+        String json = JSON.toJSONString(map);
+        try {
+            rabbitTemplate.convertAndSend(
+                    RabbitMQConfig.EX_MEDIA_PROCESSTASK, routingkey_media_video, json);
+        } catch (Exception e) {
+            return new ResponseResult(CommonCode.FAIL);
+        }
+        // 想mq发送视频处理消息
         return new ResponseResult(CommonCode.SUCCESS);
     }
 
     private String getFileFolderRelativePath(String fileMd5, String fileExt) {
-        return fileMd5.substring(0, 1)
-                + "/"
-                + fileMd5.substring(1, 2)
-                + "/"
-                + fileMd5
-                + "/"
-                + fileMd5
-                + "."
-                + fileExt;
+        return fileMd5.substring(0, 1) + "/" + fileMd5.substring(1, 2) + "/" + fileMd5 + "/";
     }
 
     private boolean checkFileMd5(File mergeFile, String md5) {

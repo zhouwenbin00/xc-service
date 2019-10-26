@@ -2,10 +2,7 @@ package com.zwb.demo.xc.api.course;
 
 import com.zwb.demo.xc.common.model.response.QueryResponseResult;
 import com.zwb.demo.xc.common.model.response.ResponseResult;
-import com.zwb.demo.xc.domain.course.CourseBase;
-import com.zwb.demo.xc.domain.course.CourseMarket;
-import com.zwb.demo.xc.domain.course.CoursePic;
-import com.zwb.demo.xc.domain.course.Teachplan;
+import com.zwb.demo.xc.domain.course.*;
 import com.zwb.demo.xc.domain.course.ext.CourseInfo;
 import com.zwb.demo.xc.domain.course.ext.CourseView;
 import com.zwb.demo.xc.domain.course.ext.TeachplanNode;
@@ -60,4 +57,7 @@ public interface CourseControllerApi {
 
     @ApiOperation("发布课程")
     CoursePublishResult publish(String courseid);
+
+    @ApiOperation("保存媒资信息")
+    ResponseResult savemedia(TeachplanMedia teachplanMedia);
 }

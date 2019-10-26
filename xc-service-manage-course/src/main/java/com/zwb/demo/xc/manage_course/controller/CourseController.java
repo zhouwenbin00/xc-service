@@ -3,10 +3,7 @@ package com.zwb.demo.xc.manage_course.controller;
 import com.zwb.demo.xc.api.course.CourseControllerApi;
 import com.zwb.demo.xc.common.model.response.QueryResponseResult;
 import com.zwb.demo.xc.common.model.response.ResponseResult;
-import com.zwb.demo.xc.domain.course.CourseBase;
-import com.zwb.demo.xc.domain.course.CourseMarket;
-import com.zwb.demo.xc.domain.course.CoursePic;
-import com.zwb.demo.xc.domain.course.Teachplan;
+import com.zwb.demo.xc.domain.course.*;
 import com.zwb.demo.xc.domain.course.ext.CourseView;
 import com.zwb.demo.xc.domain.course.ext.TeachplanNode;
 import com.zwb.demo.xc.domain.course.request.CourseListRequest;
@@ -112,5 +109,11 @@ public class CourseController implements CourseControllerApi {
     @PostMapping("/publish/{id}")
     public CoursePublishResult publish(@PathVariable("id") String courseid) {
         return courseService.publish(courseid);
+    }
+
+    @Override
+    @PostMapping("/savemedia")
+    public ResponseResult savemedia(@RequestBody TeachplanMedia teachplanMedia) {
+        return courseService.savemedia(teachplanMedia);
     }
 }
