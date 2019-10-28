@@ -32,6 +32,7 @@ import springfox.documentation.spring.web.json.Json;
 
 import javax.annotation.Resource;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -45,6 +46,7 @@ public class CourseService {
     @Resource CourseBaseRepository courseBaseRepository;
     @Resource CoursePubRepository coursePubRepository;
     @Resource TeachplanMediaRepository teachplanMediaRepository;
+    @Resource TeachplanMediaPubRepository teachplanMediaPubRepository;
     @Resource CourseMapper courseMapper;
     @Resource CourseMarketRepository courseMarketRepository;
     @Resource CoursePicRepository coursePicRepository;
@@ -313,7 +315,23 @@ public class CourseService {
         // 缓存课程信息。。
         // 得到页面url
         String pageUrl = cmsPostPageResult.getPageUrl();
+        saveTeachplanMediaPub(courseid);
         return new CoursePublishResult(CommonCode.SUCCESS, pageUrl);
+    }
+
+    private void saveTeachplanMediaPub(String courseid) {
+        // 先删除TeachplanMediaPub的数据
+        teachplanMediaPubRepository.deleteByCourseId(courseid);
+        // 从teachplanMedia查询
+        List<TeachplanMedia> teachplanMediaList = teachplanMediaRepository.findByCourseId(courseid);
+        List<TeachplanMediaPub> teachplanMediaPubList = new ArrayList<>();
+        for (TeachplanMedia teachplanMedia : teachplanMediaList) {
+            TeachplanMediaPub teachplanMediaPub = new TeachplanMediaPub();
+            BeanUtils.copyProperties(teachplanMedia, teachplanMediaPub);
+            teachplanMediaPub.setTimestamp(new Date());
+            teachplanMediaPubList.add(teachplanMediaPub);
+        }
+        teachplanMediaPubRepository.saveAll(teachplanMediaPubList);
     }
 
     private CoursePub saveCoursePub(String courseid, CoursePub coursePub) {

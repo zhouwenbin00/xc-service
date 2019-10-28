@@ -5,6 +5,7 @@ import com.zwb.demo.xc.common.model.response.CommonCode;
 import com.zwb.demo.xc.common.model.response.QueryResponseResult;
 import com.zwb.demo.xc.common.model.response.QueryResult;
 import com.zwb.demo.xc.domain.course.CoursePub;
+import com.zwb.demo.xc.domain.course.TeachplanMediaPub;
 import com.zwb.demo.xc.domain.search.CourseSearchParam;
 import org.apache.commons.lang3.StringUtils;
 import org.elasticsearch.action.search.SearchRequest;
@@ -25,6 +26,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -40,6 +42,15 @@ public class EsCourseService {
 
     @Value("${xuecheng.elasticsearch.course.source_field}")
     private String source_field;
+
+    @Value("${xuecheng.elasticsearch.media.index}")
+    private String media_index;
+
+    @Value("${xuecheng.elasticsearch.media.type}")
+    private String media_type;
+
+    @Value("${xuecheng.elasticsearch.media.source_field}")
+    private String media_source_field;
 
     @Autowired RestHighLevelClient client;
 
@@ -168,5 +179,101 @@ public class EsCourseService {
         }
         queryResult.setList(list);
         return new QueryResponseResult<>(CommonCode.SUCCESS, queryResult);
+    }
+
+    public Map<String, CoursePub> getall(String id) {
+        // 定义一个搜索对象
+        SearchRequest searchRequest = new SearchRequest(es_index);
+        // type
+        searchRequest.types(es_type);
+        // searchSourceBuilder
+        SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+        searchSourceBuilder.query(QueryBuilders.termQuery("id", id));
+        // 过滤字段
+
+        searchRequest.source(searchSourceBuilder);
+        SearchResponse response = null;
+        try {
+            response = client.search(searchRequest);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        SearchHits hits = response.getHits();
+        SearchHit[] searchHits = hits.getHits();
+        Map<String, CoursePub> map = new HashMap<>();
+        for (SearchHit searchHit : searchHits) {
+            Map<String, Object> sourceAsMap = searchHit.getSourceAsMap();
+            String courseId = (String) sourceAsMap.get("id");
+            String name = (String) sourceAsMap.get("name");
+            String grade = (String) sourceAsMap.get("grade");
+            String charge = (String) sourceAsMap.get("charge");
+            String pic = (String) sourceAsMap.get("pic");
+            String description = (String) sourceAsMap.get("description");
+            String teachplan = (String) sourceAsMap.get("teachplan");
+            CoursePub coursePub = new CoursePub();
+            coursePub.setId(courseId);
+            coursePub.setName(name);
+            coursePub.setPic(pic);
+            coursePub.setGrade(grade);
+            coursePub.setTeachplan(teachplan);
+            coursePub.setDescription(description);
+            map.put(courseId, coursePub);
+        }
+        return map;
+    }
+
+    /**
+     * 根据多个id搜索课程计划信息
+     *
+     * @return
+     */
+    public QueryResponseResult<TeachplanMediaPub> getmedia(String[] teachplanIds) {
+        // 定义一个搜索对象
+        SearchRequest searchRequest = new SearchRequest(media_index);
+        // type
+        searchRequest.types(media_type);
+        // searchSourceBuilder
+        SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+
+        // 过滤字段
+        String[] split = media_source_field.split(",");
+        searchSourceBuilder.fetchSource(split, new String[] {});
+        // 使用termQuery用多个id查询
+        // -----------termsQuery----------------------????????????---------
+        searchSourceBuilder.query(QueryBuilders.termsQuery("teachplan_id", teachplanIds));
+
+        searchRequest.source(searchSourceBuilder);
+        SearchResponse response = null;
+        try {
+            response = client.search(searchRequest);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        SearchHits hits = response.getHits();
+        SearchHit[] searchHits = hits.getHits();
+        Map<String, CoursePub> map = new HashMap<>(); // 数据列表
+        List<TeachplanMediaPub> teachplanMediaPubList = new ArrayList<>();
+        for (SearchHit hit : searchHits) {
+            TeachplanMediaPub teachplanMediaPub = new TeachplanMediaPub();
+            Map<String, Object> sourceAsMap = hit.getSourceAsMap(); // 取出课程计划媒资信息
+            String courseid = (String) sourceAsMap.get("courseid");
+            String media_id = (String) sourceAsMap.get("media_id");
+            String media_url = (String) sourceAsMap.get("media_url");
+            String teachplan_id = (String) sourceAsMap.get("teachplan_id");
+            String media_fileoriginalname = (String) sourceAsMap.get("media_fileoriginalname");
+            teachplanMediaPub.setCourseId(courseid);
+            teachplanMediaPub.setMediaUrl(media_url);
+            teachplanMediaPub.setMediaFileOriginalName(media_fileoriginalname);
+            teachplanMediaPub.setMediaId(media_id);
+            teachplanMediaPub.setTeachplanId(teachplan_id); // 将数据加入列表
+            teachplanMediaPubList.add(teachplanMediaPub);
+        }
+        // 构建返回课程媒资信息对象
+        QueryResult<TeachplanMediaPub> queryResult = new QueryResult<>();
+        queryResult.setList(teachplanMediaPubList);
+        queryResult.setTotal(hits.getTotalHits());
+        QueryResponseResult<TeachplanMediaPub> queryResponseResult =
+                new QueryResponseResult<>(CommonCode.SUCCESS, queryResult);
+        return queryResponseResult;
     }
 }
