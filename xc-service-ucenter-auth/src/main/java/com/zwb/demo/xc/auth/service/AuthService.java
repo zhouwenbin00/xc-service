@@ -7,6 +7,7 @@ import com.zwb.demo.xc.domain.ucenter.ext.AuthToken;
 import com.zwb.demo.xc.domain.ucenter.request.LoginRequest;
 import com.zwb.demo.xc.domain.ucenter.response.AuthCode;
 import com.zwb.demo.xc.domain.ucenter.response.LoginResult;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.client.ServiceInstance;
@@ -89,28 +90,43 @@ public class AuthService {
         body.add("password", password);
         HttpEntity<MultiValueMap<String, String>> multiValueMapHttpEntity =
                 new HttpEntity<>(body, headers);
-        // 指定 restTemplate当遇到400或401响应时候也不要抛出异常，也要正常返回值
-        restTemplate.setErrorHandler(
-                new DefaultResponseErrorHandler() {
-                    @Override
-                    public void handleError(ClientHttpResponse response) throws IOException {
-                        // 当响应的值为400或401时候也要正常响应，不要抛出异常
-                        if (response.getRawStatusCode() != 400
-                                && response.getRawStatusCode() != 401) {
-                            super.handleError(response);
+        Map map = null;
+        try {
+            // 指定 restTemplate当遇到400或401响应时候也不要抛出异常，也要正常返回值
+            restTemplate.setErrorHandler(
+                    new DefaultResponseErrorHandler() {
+                        @Override
+                        public void handleError(ClientHttpResponse response) throws IOException {
+                            // 当响应的值为400或401时候也要正常响应，不要抛出异常
+                            if (response.getRawStatusCode() != 400
+                                    && response.getRawStatusCode() != 401) {
+                                super.handleError(response);
+                            }
                         }
-                    }
-                });
-        // 远程调用申请令牌
-        ResponseEntity<Map> exchange =
-                restTemplate.exchange(authUrl, HttpMethod.POST, multiValueMapHttpEntity, Map.class);
-        Map map = exchange.getBody();
+                    });
+            // 远程调用申请令牌
+            ResponseEntity<Map> exchange =
+                    restTemplate.exchange(
+                            authUrl, HttpMethod.POST, multiValueMapHttpEntity, Map.class);
+            map = exchange.getBody();
+        } catch (Exception e) {
+            ExceptionCast.cast(AuthCode.AUTH_LOGIN_APPLYTOKEN_FAIL);
+        }
         if (map == null
                 || map.get("access_token") == null
                 || map.get("refresh_token") == null
                 || map.get("jti") == null) { // jti是jwt令牌的唯一标识作为用户身份令牌
+            String error_description = (String) map.get("error_description");
+            if (StringUtils.isNotEmpty(error_description)) {
+                if (error_description.equals("坏的凭证")) {
+                    ExceptionCast.cast(AuthCode.AUTH_CREDENTIAL_ERROR);
+                } else if (error_description.contains("UserDetailsService returned null")) {
+                    ExceptionCast.cast(AuthCode.AUTH_ACCOUNT_NOTEXISTS);
+                }
+            }
             ExceptionCast.cast(AuthCode.AUTH_LOGIN_APPLYTOKEN_FAIL);
         }
+
         AuthToken authToken = new AuthToken();
         authToken.setJwt_token((String) map.get("access_token")); // 用户令牌
         authToken.setRefresh_token((String) map.get("refresh_token")); // 刷新令牌
@@ -124,5 +140,33 @@ public class AuthService {
         // 进行base64编码
         byte[] encode = Base64Utils.encode(string.getBytes());
         return "Basic " + new String(encode);
+    }
+
+    /**
+     * 从redis查询令牌
+     *
+     * @param token
+     * @return
+     */
+    public AuthToken getUserToken(String token) {
+        String userToken = "user_token:" + token;
+        String userTokenString = stringRedisTemplate.opsForValue().get(userToken);
+        if (userTokenString == null) {
+            return null;
+        }
+        return JSON.parseObject(userTokenString, AuthToken.class);
+    }
+
+    /**
+     * 删除令牌
+     *
+     * @param access_token
+     * @return
+     */
+    public boolean delToken(String access_token) {
+        String name = "user_token:" + access_token;
+        stringRedisTemplate.delete(name);
+        Long expire = stringRedisTemplate.getExpire(access_token, TimeUnit.SECONDS);
+        return expire < 0;
     }
 }

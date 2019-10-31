@@ -16,6 +16,7 @@ public enum AuthCode implements ResultCode {
     AUTH_LOGIN_ERROR(false, 23006, "登陆过程出现异常请尝试重新操作！"),
     AUTH_LOGIN_APPLYTOKEN_FAIL(false, 23007, "申请令牌失败！"),
     AUTH_LOGIN_TOKEN_SAVEFAIL(false, 23008, "保存令牌失败！"),
+    AUTH_LOGOUT_FAIL(false, 23009, "删除失败！"),
     ;
 
     // 操作代码

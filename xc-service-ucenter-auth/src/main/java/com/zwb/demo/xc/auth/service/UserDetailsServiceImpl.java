@@ -1,5 +1,6 @@
 package com.zwb.demo.xc.auth.service;
 
+import com.zwb.demo.xc.auth.client.UserClient;
 import com.zwb.demo.xc.domain.ucenter.XcMenu;
 import com.zwb.demo.xc.domain.ucenter.ext.XcUserExt;
 import org.apache.commons.lang3.StringUtils;
@@ -23,6 +24,7 @@ import java.util.List;
 public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Autowired ClientDetailsService clientDetailsService;
+    @Autowired UserClient userClient;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -43,11 +45,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         if (StringUtils.isEmpty(username)) {
             return null;
         }
-        XcUserExt userext = new XcUserExt();
-        userext.setUsername("itcast");
-        userext.setPassword(new BCryptPasswordEncoder().encode("123"));
-        userext.setPermissions(new ArrayList<XcMenu>());
-        if (userext == null) {
+        // 请求ucenter查询用户
+        XcUserExt userext = userClient.getUserext(username);
+        if (userext == null) { // 返回NULL表示用户不存在，Spring Security会抛出异常
             return null;
         }
         // 取出正确密码（hash值）
@@ -57,11 +57,12 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         // 用户权限，这里暂时使用静态数据，最终会从数据库读取
         // 从数据库获取权限
         List<XcMenu> permissions = userext.getPermissions();
-        List<String> user_permission = new ArrayList<>();
-        permissions.forEach(item -> user_permission.add(item.getCode()));
+        //        List<String> user_permission = new ArrayList<>();
+        //        permissions.forEach(item -> user_permission.add(item.getCode()));
         //        user_permission.add("course_get_baseinfo");
         //        user_permission.add("course_find_pic");
-        String user_permission_string = StringUtils.join(user_permission.toArray(), ",");
+        //        String user_permission_string = StringUtils.join(user_permission.toArray(), ",");
+        String user_permission_string = "";
         UserJwt userDetails =
                 new UserJwt(
                         username,

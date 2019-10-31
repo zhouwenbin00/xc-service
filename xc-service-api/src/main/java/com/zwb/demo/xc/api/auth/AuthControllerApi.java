@@ -2,6 +2,7 @@ package com.zwb.demo.xc.api.auth;
 
 import com.zwb.demo.xc.common.model.response.ResponseResult;
 import com.zwb.demo.xc.domain.ucenter.request.LoginRequest;
+import com.zwb.demo.xc.domain.ucenter.response.JwtResult;
 import com.zwb.demo.xc.domain.ucenter.response.LoginResult;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -14,4 +15,7 @@ public interface AuthControllerApi {
 
     @ApiOperation("退出")
     public ResponseResult logout();
+
+    @ApiOperation("查询userjwt令牌")
+    public JwtResult userjwt();
 }
