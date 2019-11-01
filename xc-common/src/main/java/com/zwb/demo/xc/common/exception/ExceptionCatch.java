@@ -31,6 +31,7 @@ public class ExceptionCatch {
     @ResponseBody
     public ResponseResult exception(Exception e) {
         log.error("catch exception:{}", e.getMessage());
+        e.printStackTrace();
         if (EXCEPTIONS == null) {
             EXCEPTIONS = builder.build();
         }

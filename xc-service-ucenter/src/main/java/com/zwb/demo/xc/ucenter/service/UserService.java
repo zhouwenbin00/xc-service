@@ -1,19 +1,24 @@
 package com.zwb.demo.xc.ucenter.service;
 
 import com.zwb.demo.xc.domain.ucenter.XcCompanyUser;
+import com.zwb.demo.xc.domain.ucenter.XcMenu;
 import com.zwb.demo.xc.domain.ucenter.XcUser;
 import com.zwb.demo.xc.domain.ucenter.ext.XcUserExt;
 import com.zwb.demo.xc.ucenter.dao.XcCompanyUserRepository;
+import com.zwb.demo.xc.ucenter.dao.XcMenuMapper;
 import com.zwb.demo.xc.ucenter.dao.XcUserRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /** Created by zwb on 2019/10/31 11:54 */
 @Service
 public class UserService {
     @Autowired XcUserRepository xcUserRepository;
     @Autowired XcCompanyUserRepository xcCompanyUserRepository;
+    @Autowired XcMenuMapper xcMenuMapper;
 
     /**
      * 根据账号查询用户信息
@@ -45,6 +50,9 @@ public class UserService {
             String companyId = xcCompanyUser.getCompanyId();
             xcUserExt.setCompanyId(companyId);
         }
+        List<XcMenu> xcMenus = xcMenuMapper.selectPermissionByUserId(userId);
+        // 设置权限
+        xcUserExt.setPermissions(xcMenus);
         return xcUserExt;
     }
 }

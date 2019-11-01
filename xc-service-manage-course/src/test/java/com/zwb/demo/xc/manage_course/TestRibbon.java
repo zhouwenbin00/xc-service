@@ -3,6 +3,7 @@ package com.zwb.demo.xc.manage_course;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.zwb.demo.xc.domain.course.CourseBase;
+import com.zwb.demo.xc.domain.course.ext.CourseInfo;
 import com.zwb.demo.xc.domain.course.ext.TeachplanNode;
 import com.zwb.demo.xc.domain.course.request.CourseListRequest;
 import com.zwb.demo.xc.manage_course.dao.CourseBaseRepository;
@@ -73,8 +74,8 @@ public class TestRibbon {
     @Test
     public void testPageHelper() {
         PageHelper.startPage(1, 10);
-        Page<CourseBase> courseList = courseMapper.findCourseList(new CourseListRequest());
-        List<CourseBase> result = courseList.getResult();
+        Page<CourseInfo> courseList = courseMapper.findCourseList(new CourseListRequest());
+        List<CourseInfo> result = courseList.getResult();
         System.out.println(result);
     }
 }

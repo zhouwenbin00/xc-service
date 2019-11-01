@@ -1,5 +1,6 @@
 package com.zwb.demo.xc.manage_course;
 
+import com.zwb.demo.xc.common.interceptor.FeignClientInterceptor;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -34,5 +35,10 @@ public class ManageCourseApplication {
     @LoadBalanced // 开启客户端负载均衡
     public RestTemplate RestTemplate() {
         return new RestTemplate(new OkHttp3ClientHttpRequestFactory());
+    }
+
+    @Bean
+    public FeignClientInterceptor feignClientInterceptor() {
+        return new FeignClientInterceptor();
     }
 }

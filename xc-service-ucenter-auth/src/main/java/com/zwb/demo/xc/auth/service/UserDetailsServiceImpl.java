@@ -57,12 +57,15 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         // 用户权限，这里暂时使用静态数据，最终会从数据库读取
         // 从数据库获取权限
         List<XcMenu> permissions = userext.getPermissions();
-        //        List<String> user_permission = new ArrayList<>();
-        //        permissions.forEach(item -> user_permission.add(item.getCode()));
+        if (permissions == null) {
+            permissions = new ArrayList<>();
+        }
+        List<String> user_permission = new ArrayList<>();
+        permissions.forEach(item -> user_permission.add(item.getCode()));
         //        user_permission.add("course_get_baseinfo");
         //        user_permission.add("course_find_pic");
-        //        String user_permission_string = StringUtils.join(user_permission.toArray(), ",");
-        String user_permission_string = "";
+        String user_permission_string = StringUtils.join(user_permission.toArray(), ",");
+        //        String user_permission_string = "";
         UserJwt userDetails =
                 new UserJwt(
                         username,

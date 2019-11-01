@@ -3,6 +3,7 @@ package com.zwb.demo.xc.manage_course.controller;
 import com.zwb.demo.xc.api.course.CourseControllerApi;
 import com.zwb.demo.xc.common.model.response.QueryResponseResult;
 import com.zwb.demo.xc.common.model.response.ResponseResult;
+import com.zwb.demo.xc.common.web.BaseController;
 import com.zwb.demo.xc.domain.course.*;
 import com.zwb.demo.xc.domain.course.ext.CourseView;
 import com.zwb.demo.xc.domain.course.ext.TeachplanNode;
@@ -10,7 +11,9 @@ import com.zwb.demo.xc.domain.course.request.CourseListRequest;
 import com.zwb.demo.xc.domain.course.response.AddCourseResult;
 import com.zwb.demo.xc.domain.course.response.CoursePublishResult;
 import com.zwb.demo.xc.manage_course.service.CourseService;
+import com.zwb.demo.xc.utils.XcOauth2Util;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.PostPersist;
@@ -18,7 +21,7 @@ import javax.persistence.PostPersist;
 /** Create by zwb on 2019-10-13 19:57 */
 @RestController
 @RequestMapping("/course")
-public class CourseController implements CourseControllerApi {
+public class CourseController extends BaseController implements CourseControllerApi {
     @Autowired CourseService courseService;
 
     @Override
@@ -35,10 +38,15 @@ public class CourseController implements CourseControllerApi {
 
     @Override
     @GetMapping("/coursebase/list/{page}/{size}")
+    @PreAuthorize("hasAuthority('course_find_list')")
     public QueryResponseResult findCourseList(
             @PathVariable("page") int page,
             @PathVariable("size") int size,
             CourseListRequest courseListRequest) {
+        XcOauth2Util xcOauth2Util = new XcOauth2Util();
+        XcOauth2Util.UserJwt userJwtFromHeader = xcOauth2Util.getUserJwtFromHeader(request);
+        String companyId = userJwtFromHeader.getCompanyId();
+        courseListRequest.setCompanyId(companyId);
         return courseService.findCourseList(page, size, courseListRequest);
     }
 
@@ -49,6 +57,7 @@ public class CourseController implements CourseControllerApi {
     }
 
     @Override
+    //    @PreAuthorize("hasAuthority('course_get_baseinfo')")
     @GetMapping("/coursebase/get/{courseId}")
     public CourseBase getCoursebaseById(@PathVariable("courseId") String courseid) {
         return courseService.getCoursebaseById(courseid);
