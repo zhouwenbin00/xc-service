@@ -7,6 +7,9 @@ import lombok.ToString;
 @ToString
 public enum LearningCode implements ResultCode {
     TEACHPLAN_IS_NULL(false, 24001, "课程计划不存在！"),
+    LEARNING_GETMEDIA_ERROR(false, 24002, "课程计划不存在！"),
+    CHOOSECOURSE_USERISNULL(false, 24003, "课程计划不存在！"),
+    CHOOSECOURSE_TASKISNULL(false, 24005, "课程计划不存在！"),
     ;
     // 操作代码
     boolean success;
